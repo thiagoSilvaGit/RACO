@@ -20,7 +20,10 @@ typedef struct lreq *Lreq;
 typedef struct ordem *Ordem;
 typedef struct lord *Lord;
 Graph GRAPHinit(int V);
-void GRAPHinsertArc(Graph G);
+void GRAPHinsertArc(Graph G,int V);
+int H;
+
+
 /*estruturas*/
 struct gnode{
         Graph g;
@@ -38,10 +41,12 @@ struct node{
         link next;
 };
 
-/*ordem requisiçao*/
+/*struc de requisiçoes*/
 struct ordem{
         int I;
         int O;
+        int V;
+        bool C;
         Ordem prox;
         };
 
@@ -111,14 +116,14 @@ static glist NEWgnode(glist x,int v){
                 x->ini = novo;
                 x->fim = novo;
                 x->q++;
-                GRAPHinsertArc(novo->g);
+                GRAPHinsertArc(novo->g,v);
                 return x;
         }
         else
                 x->fim->next = novo;
                 x->fim = novo;
                 x->q++;
-                GRAPHinsertArc(novo->g);
+                GRAPHinsertArc(novo->g,v);
                 return x;
 
 
@@ -137,25 +142,28 @@ for (int v=0; v<V; ++v){
         }
 return G;}
 
- void GRAPHinsertArc(Graph G){
+ void GRAPHinsertArc(Graph G, int V){
  int i,j;
- int ad[14][14];
  link aux;
+ int **ad= new int*[V];
+ for(i=0;i<V;i++){
+        ad[i] = new int[V];
+}
  std::ifstream file ("adj.txt");
 printf("\n");
 if(!file){
         printf("\n Erro de leitura.");
         return ;
 }
- for(i=0;i<14;i++){
-   for(j=0;j<14;j++){
+ for(i=0;i<V;i++){
+   for(j=0;j<V;j++){
         file>>ad[i][j];
         printf(" %d ",ad[i][j]) ;
    }
       printf("\n");
 }
- for(i=0;i<14;i++){
- for(j=0;j<14;j++){
+ for(i=0;i<V;i++){
+ for(j=0;j<V;j++){
         if(ad[i][j]==1){
                 if(G->adj[i]==NULL){
                         G->adj[i]=NEWnode(j+1 ,G->adj[i]);
@@ -175,78 +183,6 @@ if(!file){
 
 return;
 }
-
-
-static int num[1000];
-
-/*funçoes da fila
-QUEUE QUEUEinit()
-{
-  QUEUE q = new struct queue;
-  q->inicio = NULL;
-  q->fim = NULL;
-  return q;
-}*/
-
-/*int QUEUEempty(QUEUE q)
-{
-  return q->inicio == NULL;
-}
-
-void QUEUEput(QUEUE q, int item)
-{
-  if (q->inicio == NULL)
-    {
-      q->fim = NEWnode(item, NULL);
-      q->inicio = q->fim;
-    }
-  q->fim->next = NEWnode(item, NULL);
-  q->fim = q->fim->next;
-}
-
-int QUEUEget(QUEUE q)
-{
-  int item = q->inicio->w;
-  link t = q->inicio->next;
-  free(q->inicio);
-  q->inicio = t;
-  return item;
-}
-
-void QUEUEfree(QUEUE q)
-{
-  while (q->inicio != NULL)
-    {
-      link t = q->inicio->next;
-      free(q->inicio);
-      q->inicio = t;
-    }
-  free(q);
-}*/
-/*funçao para achar o H*/
-/*int GRAPHbfs( Graph G, int s){
-int cnt=0;
-QUEUE q;
-/*q=QUEUEinit();*/
-/*for(int v=0;v<G->V;v++){
-num[v]=-1;
-/*QUEUEput(q,v);
-}
-/*QUEUEput(q,s-1);
-num[s-1]=cnt++;
-num[cnt]=cnt++;
-while(!QUEUEempty(q)){
-        int v=QUEUEget(q);
-        for(link a=G->adj[v];a!=NULL;a=a->next){
-                if(num[a->w]==-1){
-                num[a->w]=cnt++;
-                QUEUEput(q,a->w);
-                }
- }
- QUEUEfree(q);
- }
- return cnt;
- }*/
 
 
  typedef struct link2 Link2;
@@ -350,23 +286,25 @@ printf("\n exclui aresta");
         }
 
 }
-
-Lord ordena(int V){
+/*criando estrutura de requisiçoes*/
+Lord requisicoes(int V){
 glist O;
 O=crialista();
 O=NEWgnode(O,V);
 link q;
-int cont=0,i,j,k=0;
+int i,j;
 Lord Vord = new struct lord;
 Vord->ini=NULL;
 Ordem l;
 int **or=new int*[V];
+
 for(i=0;i<V;i++){
         or[i] = new int[V];
         }
-int **ror=new int*[V];
+
+int **r=new int*[V];
 for(i=0;i<V;i++){
-        ror[i] = new int[V];
+        r[i] = new int[V];
         }
 
 
@@ -387,95 +325,80 @@ for(i=0;i<V;i++){
 /*fechar arquivo*/
 file1.close();
 
+std::ifstream file ("matriz.txt");
+
+if(!file){
+        printf("\n Erro de leitura.");
+        return 0;
+}
+for(i=0;i<V;i++){
+   for(j=0;j<V;j++){
+        file>>r[i][j];
+   }
+}
+file.close();
+
 for(i=0;i<V;i++){
         for(j=0;j<V;j++){
-        if(or[i][j]==0){
-                ror[i][j]=0;}
                 while(or[i][j]!=0){
-                        Resp ord = new struct resp;
-                        ord = NULL;
-                        ord=dijkstra(i+1,j+1,O->ini->g);
-                                if(ord->c==1){
-                                        ror[i][j] = ord->V;
-                                        or[i][j]--;
-                                        cont++;
-
-                                        }
-                        }
-
-                }
-        }
-for(i=0;i<V;i++){
-        for(j=0;j<V;j++){
-                cout<<" "<<ror[i][j];
-                }
-        cout<<"\n";
-        }
-
-
-
-
-int *ordR=new int[cont];
-for(i=0;i<V;i++){
-        for(j=0;j<V;j++){
-                if(ror[i][j]!=0){
-                        ordR[k]=ror[i][j];
-                        k++;}
-                }
-        }
-/*ordenar o vetor*/
-int aux;
-for(i = 0;i<cont;i++){
-    for(j=i+1; j<cont;j++)
-    {
-      if (ordR[i] > ordR[j])
-      {
-         aux = ordR[i];
-         ordR[i] = ordR[j];
-         ordR[j] = aux;
-      }
-    }
-  }
-
-int C=cont-1;
-cout <<"\n C:"<< cont;
-while(C> 0){
-cout<<"\ninteraçao C:"<<C;
-for(i=0;i<V;i++){
-        for(j=0;j<V;j++){
-                if(ror[i][j]==ordR[C]){
+                Resp ord = new struct resp;
+                ord = NULL;
+                ord=dijkstra(i+1,j+1,O->ini->g);
+                if(ord->c==1){
+                        or[i][j]--;
+                        while(r[i][j]!=0){
                                 Ordem OR= new struct ordem;
                                 OR->I=i+1;
                                 OR->O=j+1;
+                                OR->V=ord->V;
+                                OR->C=1;
                                 OR->prox=Vord->ini;
                                 Vord->ini = OR;
-                                C--;
+                                r[i][j]--;
                                 }
-
+                        }
                 }
-}
-}
-
-cout<<"\n\nCCC:"<<C;
-int ba=0;
-for(l=Vord->ini; l!=NULL; l=l->prox){
-        ba++;
-        cout << "\n\n\n Origem :"<< l->I;
-        cout << "\nDestino :"<< l->O;
 
         }
-cout<<"\n\nba:"<<ba;
-cout<<"\n";
-
+}
 
 return Vord;
 }
 
+/*Ordenando q lista de requisiçoes*/
+Lord ordena(Lord l){
+int r,t,y;
+Ordem k,i;
+for(i=l->ini;i!=NULL;i=i->prox){
+        for(Ordem j= i->prox;j!=NULL;j=j->prox){
+
+                if(i->V < j->V){
+
+                        r=i->I;
+                        t=i->O;
+                        y=i->V;
+                        i->I=j->I;
+                        i->O=j->O;
+                        i->V=j->V;
+                        j->I = r;
+                        j->O = t;
+                        j->V = y;
+                        }
+                }
+
+}
+H=l->ini->V;
+cout<<"\nH: "<<H;
+
+return l;
+}
 
 int main(){
 glist B;
 int v,y,i,j;
 link te;
+
+/*leitura do arquivo com o numero de nos*/
 std::ifstream file2 ("tamanho.txt");
 
 if(!file2){
@@ -484,23 +407,18 @@ if(!file2){
 file2>>v;
 
 file2.close();
-
-int **r=new int*[v];
+int **r =new int*[v];
 for(i=0;i<v;i++){
         r[i] = new int[v];
         }
-B=crialista();
-B=NEWgnode(B,v);
-Lord Lordena= ordena(v);
-Ordem l;
 
-/* inicio da criacao da matriz de requisicao*/
+/*leitura do arquivo com as requisiçoes*/
 std::ifstream file ("matriz.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
         return 0;
-};
+}
 for(i=0;i<v;i++){
    for(j=0;j<v;j++){
         file>>r[i][j];
@@ -508,27 +426,43 @@ for(i=0;i<v;i++){
 }
 file.close();
 
+B=crialista();
+B=NEWgnode(B,v);
+
+Lord Lordena= requisicoes(v);
+Ordem l,k;
+Lordena = ordena(Lordena);
+
+/*mostrando a lista de requisiçoes ordenada*/
+for(k=Lordena->ini; k!=NULL; k=k->prox){
+        cout << "\n\n\nOrigem: "<< k->I;
+        cout << "\nDestino: " << k->O;
+        cout << "\nTamanho: " << k->V;
+        }
+
+/*colocando as requisiçoes no grafo*/
 for(l=Lordena->ini;l!=NULL;l=l->prox){
         i=l->I;
         j=l->O;
-        while(r[i-1][j-1]>0){
-        Resp road = new struct resp;
-        road = NULL;
-        road=dijkstra(i,j,B->ini->g);
-        printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
-        for(te=road->next;te!=NULL;te=te->next){
-        printf("\nC:%d",te->w);}
-        cout<<"\nTamanho: "<<road->V;
-        if(road->c==1){
-                exclui_aresta(B->ini->g, road);
-                r[i-1][j-1]--;
+        while(l->C){
+                Resp road = new struct resp;
+                road = NULL;
+                road=dijkstra(i,j,B->ini->g);
+                printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
+                for(te=road->next;te!=NULL;te=te->next){
+                printf("\nC:%d",te->w);}
+                cout<<"\nTamanho: "<<road->V;
+                if(road->c==1){
+                        exclui_aresta(B->ini->g, road);
+                        r[i-1][j-1]--;
+                        l->C=0;
+                        }
+                if(road->c==0){
+                        B=NEWgnode(B,v);
+                        GRAPHinsertArc(B->ini->g,v);
+                        }
+                printf("\nG:%d",B->q);
                 }
-        if(road->c==0){
-                B=NEWgnode(B,v);
-                GRAPHinsertArc(B->ini->g);
-                }
-        printf("\nG:%d",B->q);
-        }
 }
 
 
