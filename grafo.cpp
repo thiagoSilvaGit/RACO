@@ -21,7 +21,8 @@ typedef struct ordem *Ordem;
 typedef struct lord *Lord;
 Graph GRAPHinit(int V);
 void GRAPHinsertArc(Graph G,int V);
-int H;
+void desalocaMatriz(int ** r,int v);
+int H,tamL=0;
 
 
 /*estruturas*/
@@ -52,6 +53,7 @@ struct ordem{
 
 struct lord{
         Ordem ini;
+
         };
 
 struct graph{
@@ -192,6 +194,7 @@ struct link2
     int visitado;
     int anterior;
   };
+
 Resp dijkstra(int o, int f, Graph g)
   {
     Link2 *Q;
@@ -355,15 +358,120 @@ for(i=0;i<V;i++){
                                 OR->prox=Vord->ini;
                                 Vord->ini = OR;
                                 r[i][j]--;
+                                tamL++;
                                 }
                         }
                 }
 
         }
 }
+ desalocaMatriz(or,V);
+ desalocaMatriz(r,V);
 
 return Vord;
 }
+
+/*desaloca link*/
+void desalocalink(link a){
+link aux = a;
+link del;
+while(aux != NULL ){
+        del = aux;
+        aux = aux->next;
+        delete del ;
+}
+delete aux;
+}
+
+/*Desalocar grafo*/
+
+desalocaGrafo(Graph g, int v){
+
+link aux;
+int i ;
+for (i=0;i<v;i++){
+        desalocalink(g->adj[i]);
+
+}
+delete g->adj;
+
+delete g;
+
+}
+
+/*Desalocar lista de grafo*/
+
+desalocaglist(glist B){
+bins aux,del;
+aux = B->ini;
+
+while(aux != NULL ){
+        del = aux;
+        aux = aux->next;
+        desalocaGrafo(del->g,del->g->V);
+}
+delete aux;
+delete B->ini;
+delete B->fim;
+delete B;
+}
+
+
+/* Desalocar a Lord*/
+void desalocaLord(Lord l){
+Ordem aux=l->ini;
+Ordem del;
+
+while(aux != NULL ){
+        del = aux;
+        aux = aux->prox;
+        delete del ;
+}
+
+delete l;
+}
+
+/*Randomizar a lista de requisiçoes*/
+Lord randomiza (Lord l){
+int * rd = new int[tamL];
+int i,x,aux;
+printf("\nVetor sem ordenar\n\n");
+for(i=0;i<tamL;i++){
+        rd[i] = i+1; /* inicializa o vetor com as posicões da lista*/
+}
+for(i=0;i<tamL ;i++){
+        x = (rand()%(tamL-1)); //gera numero aleatorio de 1 ate tamL
+        aux = rd[i];
+        rd[i]= rd[x];
+        rd[x] = aux;
+}
+
+Lord Vord = new struct lord;
+Vord->ini=NULL;
+Ordem j; int cnt;
+for(i=0;i<tamL;i++){
+        x= rd[i]; /*vai inserir a posição X da lista na nova lista*/
+
+        for(j=l->ini,cnt=1;j!=NULL;j=j->prox,cnt++) {
+                if(cnt == x){     /*percorre a lista ate a posição desejada*/
+                        Ordem OR= new struct ordem;  /* vai copiar as informaçoes para um novo struct Ordem*/
+                        OR->I=j->I;
+                        OR->O=j->O;
+                        OR->V=j->V;
+                        OR->C=1;
+                        OR->prox=Vord->ini;
+                        Vord->ini = OR;
+                        break;
+                }
+        }
+}
+
+desalocaLord(l); /*desaloca a lista q estava sequencial*/
+delete []rd;
+return Vord;   /*retorna a nova lista randomizada*/
+
+}
+
 
 /*Ordenando q lista de requisiçoes*/
 Lord ordena(Lord l){
@@ -392,6 +500,19 @@ cout<<"\nH: "<<H;
 
 return l;
 }
+
+/*desaloca matriz*/
+
+void desalocaMatriz(int ** r,int v){
+int i;
+
+for(i=0;i<v;i++){
+        delete r[i];
+
+}
+delete []r;
+}
+
 
 int main(){
 glist B;
@@ -431,6 +552,7 @@ B=NEWgnode(B,v);
 
 Lord Lordena= requisicoes(v);
 Ordem l,k;
+Lordena = randomiza(Lordena);
 Lordena = ordena(Lordena);
 
 /*mostrando a lista de requisiçoes ordenada*/
@@ -504,6 +626,9 @@ for(i=0;i<v;i++){
 
 
 getch();
+desalocaglist(B);
+desalocaLord (Lordena);
+desalocaMatriz(r,v);
         return 0;
 }
 
