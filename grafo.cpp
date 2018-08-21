@@ -53,12 +53,12 @@ struct ordem{
 
 struct lord{
         Ordem ini;
-
         };
 
 struct graph{
         int V;
         int A;
+        int IG;
         link *adj;
 };
 
@@ -68,10 +68,6 @@ struct resp{
         link next;
 };
 
-struct queue { /* aqui esta especificado o que e' */
-  link inicio; /* uma fila: dois apontadores para QUEUEnode */
-  link fim;
-};
 /*lista de resposta*/
 struct req{
         int o;
@@ -514,6 +510,97 @@ delete []r;
 }
 
 
+void kapov(Lord k,glist A,int v){
+bins aux;
+int i,j;
+link te;
+Ordem l;
+int soma=0;
+for(l=k->ini;l!=NULL;l=l->prox){
+        i=l->I;
+        j=l->O;
+        Resp road = new struct resp;
+        road = NULL;
+        aux=A->ini;
+        while(l->C){
+                road=dijkstra(i,j,aux->g);
+                printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
+                for(te=road->next;te!=NULL;te=te->next){
+                printf("\nC:%d",te->w);}
+                cout<<"\nTamanho: "<<road->V;
+                if(road->c==1 && road->V <= H){
+                        exclui_aresta(aux->g, road);
+                        l->C=0;
+                        soma=soma+road->V;
+                        }
+
+                else if(road->V > H && aux->next!=NULL){
+                        cout<<"\nENTREI E FUI PARA O PROXIMO GRAFO";
+                        aux=aux->next;
+                        }
+
+                else if(road->V > H && aux->next==NULL){
+                        A=NEWgnode(A,v);
+                        GRAPHinsertArc(A->ini->g,v);
+                        aux=A->fim;
+                        }
+
+                printf("\nG:%d",A->q);
+                }
+}
+
+cout<<"\nSomatorio:"<<soma;
+cout<<"\nTamanho:"<<tamL;
+
+}
+
+
+
+
+
+
+void gulosa(Lord k,glist C,int V){
+bins aux;
+int i,j;
+link te;
+Ordem l;
+int soma=0;
+
+for(l=k->ini;l!=NULL;l=l->prox){
+        i=l->I;
+        j=l->O;
+        Resp road = new struct resp;
+        road = NULL;
+        aux=C->ini;
+        while(l->C){
+                road=dijkstra(i,j,aux->g);
+                printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
+                for(te=road->next;te!=NULL;te=te->next){
+                printf("\nC:%d",te->w);}
+                cout<<"\nTamanho: "<<road->V;
+                if(road->c==1){
+                        exclui_aresta(aux->g, road);
+                        l->C=0;
+                        soma=soma+road->V;
+                        }
+                else if(road->c==0 && aux->next!=NULL){
+                        aux=aux->next;
+                        }
+                else if(road->c==0 && aux->next == NULL){
+                        C=NEWgnode(C,V);
+                        GRAPHinsertArc(C->ini->g,V);
+                        aux=C->fim;
+                        }
+                printf("\nG:%d",C->q);
+                }
+}
+cout<<"\nSomatorio:"<<soma;
+cout<<"\nTamanho:"<<tamL;
+
+}
+
+
+
 int main(){
 glist B;
 int v,y,i,j;
@@ -562,60 +649,10 @@ for(k=Lordena->ini; k!=NULL; k=k->prox){
         cout << "\nTamanho: " << k->V;
         }
 
-/*colocando as requisiçoes no grafo*/
-for(l=Lordena->ini;l!=NULL;l=l->prox){
-        i=l->I;
-        j=l->O;
-        while(l->C){
-                Resp road = new struct resp;
-                road = NULL;
-                road=dijkstra(i,j,B->ini->g);
-                printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
-                for(te=road->next;te!=NULL;te=te->next){
-                printf("\nC:%d",te->w);}
-                cout<<"\nTamanho: "<<road->V;
-                if(road->c==1){
-                        exclui_aresta(B->ini->g, road);
-                        r[i-1][j-1]--;
-                        l->C=0;
-                        }
-                if(road->c==0){
-                        B=NEWgnode(B,v);
-                        GRAPHinsertArc(B->ini->g,v);
-                        }
-                printf("\nG:%d",B->q);
-                }
-}
+kapov(Lordena, B,v);
+/*gulosa(Lordena,B,v);*/
 
 
-
-
-
-
-
-/*for(i=0;i<14;i++){
-        for(j=0;j<14;j++){
-                while(r[i][j]!=0){
-                        Resp road = new struct resp;
-                        road = NULL;
-                        road=dijkstra(i+1,j+1,B->ini->g);
-                        printf("\n tem caminho de %d para %d: %d",i+1,j+1, road->c);
-                        for(te=road->next;te!=NULL;te=te->next){
-                                printf("\nC:%d",te->w);}
-                                if(road->c==1){
-                                        exclui_aresta(B->ini->g, road);
-                                        r[i][j]--;
-                                        }
-                                if(road->c==0){
-                                        B=NEWgnode(B,v);
-                                        GRAPHinsertArc(B->ini->g);
-                                        }
-                         printf("\nG:%d",B->q);
-                        }
-
-                }
-
-        }*/
         printf("\n");
 for(i=0;i<v;i++){
         for(j=0;j<v;j++){
@@ -625,10 +662,13 @@ for(i=0;i<v;i++){
 
 
 
-getch();
+
 desalocaglist(B);
 desalocaLord (Lordena);
 desalocaMatriz(r,v);
+
+getch();
+
         return 0;
 }
 
