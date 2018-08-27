@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <conio>
 #include <queue>
-#include <stdio.h>
 #include <fstream>
 using namespace std;
 
@@ -20,67 +19,103 @@ typedef struct lreq *Lreq;
 typedef struct ordem *Ordem;
 typedef struct lord *Lord;
 Graph GRAPHinit(int V);
-void GRAPHinsertArc(Graph G,int V);
+void GRAPHinsertArc(Graph G,int V,int **ad);
 void desalocaMatriz(int ** r,int v);
 int H,tamL=0;
 
 
 /*estruturas*/
+
+/*struct dos grafos*/
 struct gnode{
-        Graph g;
+        Graph g;       /*Estruras de grafos contendo um grafo e o prximo*/
         bins next;
 };
 
+
+/*strut da lista de grafos*/
 struct Glist{
-        bins ini;
-        bins fim;
-        int q;
+        bins ini;  /*Grafo de inicio da lista*/
+        bins fim;  /*Grafo de fim da lista*/
+        int q;     /*Quantidade de grafos na lista*/
 };
 
+
+
+/*struct do nó*/
 struct node{
-        int w;
-        link next;
+        int w;          /*Indice do nó*/
+        link next;      /*link para o proximo nó*/
 };
 
-/*struc de requisiçoes*/
+
+/*struct de requisiçao*/
 struct ordem{
-        int I;
-        int O;
-        int V;
-        bool C;
-        Ordem prox;
+        int I;       /*Nó de inicio da requisição*/
+        int O;       /*Nó de destino da requisição*/
+        int V;       /*Tamanho da requisição*/
+        bool C;      /*0 quando a requisição for atendida e 1 para quando nao for atendida*/
+        Ordem prox;  /**/
         };
 
 struct lord{
-        Ordem ini;
+        Ordem ini; /**/
         };
-
+/*struct de grafo*/
 struct graph{
-        int V;
-        int A;
-        int IG;
-        link *adj;
+        int V;      /*numero de vertices do grafo*/
+        int A;      /*numero de arestas do grafo*/
+        int IG;     /*indice do grafo*/
+        link *adj;  /*lista de adjacentes do grafo*/
 };
-
+/*struct de resposta*/
 struct resp{
-        int V;
-        bool c;
-        link next;
+        int V;            /*tamanho do caminho encontrado*/
+        bool c;           /*Se o caminho foi encontrado ou nao*/
+        link next;        /*Lista com os nós do caminho encontrado*/
 };
 
 /*lista de resposta*/
 struct req{
         int o;
         int f;
+        int ig;
         Resp r;
-        Req next;
+        Req prox;
 };
 
 struct lreq{
         Req ini;
         };
 
-/*funçoes para lista*/
+/*Funções para lista de resposta*/
+
+Lreq criavazia(){
+        Lreq l = new struct lreq;
+        l->ini = NULL;
+        return l;
+}
+
+Lreq criareq(Lreq l, int i , int o , int id, Resp s,link z){
+
+        Req r = new struct req;
+        r->o = i;
+        r->f  = o;
+        r->ig = id;
+        r->r = s;
+        r->r->next = z;
+        r->prox = l->ini;
+        l->ini = r;
+                return l;
+
+}
+
+
+
+
+/*funções para lista*/
+
+/*função para verificar se a lista está vazia*/
 int glist_vazia(glist l){
         if(l->ini == NULL ){
                 if(l->fim == NULL)
@@ -89,6 +124,8 @@ int glist_vazia(glist l){
         else
                 return 0;}
 
+
+/*função para criar lista*/
 glist crialista(){
         glist l = new struct Glist;
         l->ini =NULL;
@@ -98,15 +135,17 @@ glist crialista(){
 }
 
 
-
+/*função para criar um novo nó*/
 static link NEWnode( int w, link next){
         link a= new struct node ;
         a->w=w;
         a->next=next;
         return a;
 }
+
+
 /*funçao de criar um novo grafo*/
-static glist NEWgnode(glist x,int v){
+static glist NEWgnode(glist x,int v,int **adt){
         bins novo = new struct gnode;
         novo->next = NULL;
         novo->g = GRAPHinit(v);
@@ -114,14 +153,16 @@ static glist NEWgnode(glist x,int v){
                 x->ini = novo;
                 x->fim = novo;
                 x->q++;
-                GRAPHinsertArc(novo->g,v);
+                novo->g->IG=x->q;
+                GRAPHinsertArc(novo->g,v,adt);
                 return x;
         }
         else
                 x->fim->next = novo;
                 x->fim = novo;
                 x->q++;
-                GRAPHinsertArc(novo->g,v);
+                novo->g->IG=x->q;
+                GRAPHinsertArc(novo->g,v,adt);
                 return x;
 
 
@@ -131,35 +172,23 @@ static glist NEWgnode(glist x,int v){
 
 /*iniciar um grafo*/
 Graph GRAPHinit(int V){
-Graph G = new struct graph;
-G->V=V;
-G->A=0;
-G->adj=new link[V];
-for (int v=0; v<V; ++v){
-        G->adj[v]=NULL;
+        Graph G = new struct graph;
+        G->V=V;
+        G->A=0;
+        G->adj=new link[V];
+        for (int v=0; v<V; ++v){
+                G->adj[v]=NULL;
+                }
+        return G;
         }
-return G;}
 
- void GRAPHinsertArc(Graph G, int V){
- int i,j;
- link aux;
- int **ad= new int*[V];
- for(i=0;i<V;i++){
-        ad[i] = new int[V];
-}
- std::ifstream file ("adj.txt");
-printf("\n");
-if(!file){
-        printf("\n Erro de leitura.");
-        return ;
-}
- for(i=0;i<V;i++){
-   for(j=0;j<V;j++){
-        file>>ad[i][j];
-        printf(" %d ",ad[i][j]) ;
-   }
-      printf("\n");
-}
+
+/*Função para inserir os arcos*/
+ void GRAPHinsertArc(Graph G, int V,int **ad){
+        int i,j;
+        link aux;
+
+/*inserindo os arcos no grafo*/
  for(i=0;i<V;i++){
  for(j=0;j<V;j++){
         if(ad[i][j]==1){
@@ -179,16 +208,17 @@ if(!file){
    }
  }
 
-return;
+        return;
 }
 
 
  typedef struct link2 Link2;
+
 struct link2
   {
-    int dist;
-    int visitado;
-    int anterior;
+    int dist;      /*valor da distancia do no atual para nó de inicio*/
+    int visitado;  /*indicar se o nó foi visitado ou não*/
+    int anterior;  /*indice do nó anterior*/
   };
 
 Resp dijkstra(int o, int f, Graph g)
@@ -199,9 +229,8 @@ Resp dijkstra(int o, int f, Graph g)
     inf = g->V +1;
     Q = new Link2[g->V];
     tamQ = g->V;
-    for (int i=0; i<g->V; i++)
+    for (int i=0; i<g->V; i++)    /*colocando todos nós como não visitado atualizando valores do nó anterios e da dist*/
       {
-        /*Q[i]->id = i;*/
         if(i==o-1) Q[i].dist = 0;
         else Q[i].dist = inf;
         Q[i].visitado = 0;
@@ -267,9 +296,11 @@ Resp dijkstra(int o, int f, Graph g)
       return r;
     }
 
-/*funçao para excluir o caminho ja usado*/
+
+
+/*funçao para excluir o caminho utilizado*/
 void exclui_aresta(Graph g , Resp r){
-printf("\n exclui aresta");
+cout<<"\n exclui aresta";
         link i,j,k;
         int m;
         for(i=r->next, j= r->next->next; j!=NULL;i=j,j=j->next){
@@ -286,66 +317,50 @@ printf("\n exclui aresta");
 
 }
 /*criando estrutura de requisiçoes*/
-Lord requisicoes(int V){
+
+Lord requisicoes(int V,int **r,int **ad){
 glist O;
 O=crialista();
-O=NEWgnode(O,V);
+O=NEWgnode(O,V,ad);
 link q;
 int i,j;
 Lord Vord = new struct lord;
 Vord->ini=NULL;
 Ordem l;
 int **or=new int*[V];
-
 for(i=0;i<V;i++){
         or[i] = new int[V];
         }
 
-int **r=new int*[V];
+int **rq=new int*[V];
 for(i=0;i<V;i++){
-        r[i] = new int[V];
+        rq[i] = new int[V];
         }
+for(i=0;i<V;i++){
+   for(j=0;j<V;j++){
+        rq[i][j]=r[i][j];
+           }
+}
 
-
-/*ordenaçao das requisiçoes*/
-std::ifstream file1 ("ord.txt");
-
-if(!file1){
-        cout<<"\n Erro de leitura.";
-        }
 
 for(i=0;i<V;i++){
    for(j=0;j<V;j++){
-        file1>>or[i][j];
-   }
-      printf("\n");
-}
-
-/*fechar arquivo*/
-file1.close();
-
-std::ifstream file ("matriz.txt");
-
-if(!file){
-        printf("\n Erro de leitura.");
-        return 0;
-}
-for(i=0;i<V;i++){
-   for(j=0;j<V;j++){
-        file>>r[i][j];
+        if(r[i][j]!=0){
+        or[i][j]=1;}
+        else
+                or[i][j]=0;
    }
 }
-file.close();
-
+/*criando a lista de requisições*/
 for(i=0;i<V;i++){
         for(j=0;j<V;j++){
-                while(or[i][j]!=0){
+                while(or[i][j]!=0){/*achando um caminho para apenas uma requisição para da par de origem e destino*/
                 Resp ord = new struct resp;
                 ord = NULL;
                 ord=dijkstra(i+1,j+1,O->ini->g);
                 if(ord->c==1){
                         or[i][j]--;
-                        while(r[i][j]!=0){
+                        while(rq[i][j]!=0){/*criando a lista de requisições com todas as requisições de cada par de origem e destino*/
                                 Ordem OR= new struct ordem;
                                 OR->I=i+1;
                                 OR->O=j+1;
@@ -353,7 +368,7 @@ for(i=0;i<V;i++){
                                 OR->C=1;
                                 OR->prox=Vord->ini;
                                 Vord->ini = OR;
-                                r[i][j]--;
+                                rq[i][j]--;
                                 tamL++;
                                 }
                         }
@@ -362,7 +377,7 @@ for(i=0;i<V;i++){
         }
 }
  desalocaMatriz(or,V);
- desalocaMatriz(r,V);
+ desalocaMatriz(rq,V);
 
 return Vord;
 }
@@ -431,7 +446,7 @@ delete l;
 Lord randomiza (Lord l){
 int * rd = new int[tamL];
 int i,x,aux;
-printf("\nVetor sem ordenar\n\n");
+cout<<"\nVetor sem ordenar\n\n";
 for(i=0;i<tamL;i++){
         rd[i] = i+1; /* inicializa o vetor com as posicões da lista*/
 }
@@ -469,14 +484,14 @@ return Vord;   /*retorna a nova lista randomizada*/
 }
 
 
-/*Ordenando q lista de requisiçoes*/
+/*Ordenando a lista de requisiçoes*/
 Lord ordena(Lord l){
 int r,t,y;
 Ordem k,i;
 for(i=l->ini;i!=NULL;i=i->prox){
         for(Ordem j= i->prox;j!=NULL;j=j->prox){
 
-                if(i->V < j->V){
+                if(i->V < j->V){/*conferindo se o tamanho do caminho minimo da requisiço é menor que o da proxima requisição na lista de requisições*/
 
                         r=i->I;
                         t=i->O;
@@ -510,7 +525,40 @@ delete []r;
 }
 
 
-void kapov(Lord k,glist A,int v){
+
+void imprime_link(link a){
+ link aux;
+ cout << "\n Caminho : ";
+ for(aux =a ;aux!=NULL; aux = aux->next)
+        cout << " " << aux->w   ;
+}
+
+void imprime_resp (Resp r){
+cout << "\nTamanho do caminho : "<< r->V ;
+imprime_link(r->next);
+}
+
+
+void imprime_req(Lreq l){
+
+Req aux;
+cout << "\n\n Lista de Resposta\n" ;
+for(aux=l->ini;aux!=NULL;aux = aux->prox){
+cout<< "\n\n";
+cout << "\n Origem: "<< aux->o;
+cout << "\n Destino: "<< aux->f;
+cout <<"\n Indice grafo: "<< aux->ig;
+ imprime_resp(aux->r);
+
+
+}
+
+}
+
+
+
+/*metodo kapov*/
+Lreq kapov(Lord k,glist A,int v,int **ad,Lreq rr){
 bins aux;
 int i,j;
 link te;
@@ -522,36 +570,43 @@ for(l=k->ini;l!=NULL;l=l->prox){
         Resp road = new struct resp;
         road = NULL;
         aux=A->ini;
+        link z;
         while(l->C){
                 road=dijkstra(i,j,aux->g);
-                printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
+                /*cout<<"\n tem caminho de " <<l->I <<" para "<<l->O <<": "<<road->c;
                 for(te=road->next;te!=NULL;te=te->next){
-                printf("\nC:%d",te->w);}
-                cout<<"\nTamanho: "<<road->V;
-                if(road->c==1 && road->V <= H){
+                cout<<"\nC:"<<te->w;}
+                cout<<"\nTamanho: "<<road->V;*/
+                if(road->c==1 && road->V <= H){           /*caso tenha caminho e seja menor que o H*/
                         exclui_aresta(aux->g, road);
                         l->C=0;
                         soma=soma+road->V;
+                        /*cout<<"\nIG:"<<aux->g->IG;*/
+                        z= road->next;
+                        rr = criareq(rr,l->I,l->O,aux->g->IG,road,z); /* */
                         }
-
-                else if(road->V > H && aux->next!=NULL){
-                        cout<<"\nENTREI E FUI PARA O PROXIMO GRAFO";
+                /*percorrendo a lista de grafos*/
+                else if(road->V > H && aux->next!=NULL){          /*caso o caminha achado seja maior que H e tenha um proximo grafo*/
+                        /*cout<<"\nENTREI E FUI PARA O PROXIMO GRAFO";
+                        cout<<"\nIndice do grafo que nao tem caminho:"<<aux->g->IG;*/
                         aux=aux->next;
                         }
-
-                else if(road->V > H && aux->next==NULL){
-                        A=NEWgnode(A,v);
-                        GRAPHinsertArc(A->ini->g,v);
+                /*criação de novos grafos*/
+                else if(road->V > H && aux->next==NULL){   /*caso o caminho achado seja maior que H e nao tenha um proximo grafo*/
+                        A=NEWgnode(A,v,ad);
+                        /*GRAPHinsertArc(A->ini->g,v);*/
                         aux=A->fim;
                         }
 
-                printf("\nG:%d",A->q);
+                cout<<"\nG:"<<A->q;
                 }
 }
 
 cout<<"\nSomatorio:"<<soma;
 cout<<"\nTamanho:"<<tamL;
+cout<<"\n H:"<<H;
 
+return rr;
 }
 
 
@@ -559,7 +614,7 @@ cout<<"\nTamanho:"<<tamL;
 
 
 
-void gulosa(Lord k,glist C,int V){
+Lreq gulosa(Lord k,glist C,int V,int **ad,Lreq rr){
 bins aux;
 int i,j;
 link te;
@@ -572,23 +627,26 @@ for(l=k->ini;l!=NULL;l=l->prox){
         Resp road = new struct resp;
         road = NULL;
         aux=C->ini;
+        link z;
         while(l->C){
                 road=dijkstra(i,j,aux->g);
-                printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);
-                for(te=road->next;te!=NULL;te=te->next){
-                printf("\nC:%d",te->w);}
+                /*printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);*/
+                /*for(te=road->next;te!=NULL;te=te->next){
+                printf("\nC:%d",te->w);}*/
                 cout<<"\nTamanho: "<<road->V;
                 if(road->c==1){
                         exclui_aresta(aux->g, road);
                         l->C=0;
                         soma=soma+road->V;
+                        z= road->next;
+                        rr = criareq(rr,l->I,l->O,aux->g->IG,road,z);
                         }
                 else if(road->c==0 && aux->next!=NULL){
                         aux=aux->next;
                         }
                 else if(road->c==0 && aux->next == NULL){
-                        C=NEWgnode(C,V);
-                        GRAPHinsertArc(C->ini->g,V);
+                        C=NEWgnode(C,V,ad);
+                        /*GRAPHinsertArc(C->ini->g,V);*/
                         aux=C->fim;
                         }
                 printf("\nG:%d",C->q);
@@ -596,6 +654,7 @@ for(l=k->ini;l!=NULL;l=l->prox){
 }
 cout<<"\nSomatorio:"<<soma;
 cout<<"\nTamanho:"<<tamL;
+cout<<"\n H:"<<H;
 
 }
 
@@ -605,39 +664,48 @@ int main(){
 glist B;
 int v,y,i,j;
 link te;
+Lreq lr;
 
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file2 ("tamanho.txt");
+std::ifstream file ("nsf3.txt");
 
-if(!file2){
+if(!file){
         printf("\n Erro de leitura.");
         return 0;}
-file2>>v;
+file>>v;
 
-file2.close();
+int **ad= new int*[v];
+ for(i=0;i<v;i++){
+        ad[i] = new int[v];
+}
+
+
 int **r =new int*[v];
 for(i=0;i<v;i++){
         r[i] = new int[v];
         }
 
-/*leitura do arquivo com as requisiçoes*/
-std::ifstream file ("matriz.txt");
+for(i=0;i<v;i++){
+   for(j=0;j<v;j++){
+        file>>ad[i][j];
+   }
 
-if(!file){
-        printf("\n Erro de leitura.");
-        return 0;
 }
+
 for(i=0;i<v;i++){
    for(j=0;j<v;j++){
         file>>r[i][j];
    }
 }
+
+
 file.close();
 
-B=crialista();
-B=NEWgnode(B,v);
 
-Lord Lordena= requisicoes(v);
+B=crialista();
+B=NEWgnode(B,v,ad);
+
+Lord Lordena= requisicoes(v,r,ad);
 Ordem l,k;
 Lordena = randomiza(Lordena);
 Lordena = ordena(Lordena);
@@ -649,16 +717,12 @@ for(k=Lordena->ini; k!=NULL; k=k->prox){
         cout << "\nTamanho: " << k->V;
         }
 
-kapov(Lordena, B,v);
-/*gulosa(Lordena,B,v);*/
+lr = kapov(Lordena, B,v,ad,lr);
+/*lr = gulosa(Lordena,B,v,lr);*/
+
+imprime_req(lr);
 
 
-        printf("\n");
-for(i=0;i<v;i++){
-        for(j=0;j<v;j++){
-                printf(" %d ",r[i][j]);}
-                printf("\n");
-                }
 
 
 
@@ -666,7 +730,7 @@ for(i=0;i<v;i++){
 desalocaglist(B);
 desalocaLord (Lordena);
 desalocaMatriz(r,v);
-
+desalocaMatriz(ad,v);
 getch();
 
         return 0;
