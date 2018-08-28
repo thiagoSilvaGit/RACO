@@ -300,7 +300,6 @@ Resp dijkstra(int o, int f, Graph g)
 
 /*funçao para excluir o caminho utilizado*/
 void exclui_aresta(Graph g , Resp r){
-cout<<"\n exclui aresta";
         link i,j,k;
         int m;
         for(i=r->next, j= r->next->next; j!=NULL;i=j,j=j->next){
@@ -540,7 +539,7 @@ imprime_link(r->next);
 
 
 void imprime_req(Lreq l){
-
+int soma=0;
 Req aux;
 cout << "\n\n Lista de Resposta\n" ;
 for(aux=l->ini;aux!=NULL;aux = aux->prox){
@@ -548,11 +547,12 @@ cout<< "\n\n";
 cout << "\n Origem: "<< aux->o;
 cout << "\n Destino: "<< aux->f;
 cout <<"\n Indice grafo: "<< aux->ig;
- imprime_resp(aux->r);
-
-
+soma=aux->r->V+soma;
+imprime_resp(aux->r);
 }
-
+cout<<"\n\n\nSomatorio:"<<soma;
+cout<<"\nTamanho:"<<tamL;
+cout<<"\nH:"<<H;
 }
 
 
@@ -573,38 +573,25 @@ for(l=k->ini;l!=NULL;l=l->prox){
         link z;
         while(l->C){
                 road=dijkstra(i,j,aux->g);
-                /*cout<<"\n tem caminho de " <<l->I <<" para "<<l->O <<": "<<road->c;
-                for(te=road->next;te!=NULL;te=te->next){
-                cout<<"\nC:"<<te->w;}
-                cout<<"\nTamanho: "<<road->V;*/
                 if(road->c==1 && road->V <= H){           /*caso tenha caminho e seja menor que o H*/
                         exclui_aresta(aux->g, road);
                         l->C=0;
                         soma=soma+road->V;
-                        /*cout<<"\nIG:"<<aux->g->IG;*/
                         z= road->next;
                         rr = criareq(rr,l->I,l->O,aux->g->IG,road,z); /* */
                         }
                 /*percorrendo a lista de grafos*/
                 else if(road->V > H && aux->next!=NULL){          /*caso o caminha achado seja maior que H e tenha um proximo grafo*/
-                        /*cout<<"\nENTREI E FUI PARA O PROXIMO GRAFO";
-                        cout<<"\nIndice do grafo que nao tem caminho:"<<aux->g->IG;*/
                         aux=aux->next;
                         }
                 /*criação de novos grafos*/
                 else if(road->V > H && aux->next==NULL){   /*caso o caminho achado seja maior que H e nao tenha um proximo grafo*/
                         A=NEWgnode(A,v,ad);
-                        /*GRAPHinsertArc(A->ini->g,v);*/
                         aux=A->fim;
                         }
 
-                cout<<"\nG:"<<A->q;
                 }
 }
-
-cout<<"\nSomatorio:"<<soma;
-cout<<"\nTamanho:"<<tamL;
-cout<<"\n H:"<<H;
 
 return rr;
 }
@@ -617,7 +604,6 @@ return rr;
 Lreq gulosa(Lord k,glist C,int V,int **ad,Lreq rr){
 bins aux;
 int i,j;
-link te;
 Ordem l;
 int soma=0;
 
@@ -630,14 +616,11 @@ for(l=k->ini;l!=NULL;l=l->prox){
         link z;
         while(l->C){
                 road=dijkstra(i,j,aux->g);
-                /*printf("\n tem caminho de %d para %d: %d",l->I,l->O, road->c);*/
-                /*for(te=road->next;te!=NULL;te=te->next){
-                printf("\nC:%d",te->w);}*/
-                cout<<"\nTamanho: "<<road->V;
+                /*cout<<"\nTamanho: "<<road->V;*/
                 if(road->c==1){
                         exclui_aresta(aux->g, road);
                         l->C=0;
-                        soma=soma+road->V;
+                        //soma=soma+road->V;
                         z= road->next;
                         rr = criareq(rr,l->I,l->O,aux->g->IG,road,z);
                         }
@@ -646,16 +629,15 @@ for(l=k->ini;l!=NULL;l=l->prox){
                         }
                 else if(road->c==0 && aux->next == NULL){
                         C=NEWgnode(C,V,ad);
-                        /*GRAPHinsertArc(C->ini->g,V);*/
                         aux=C->fim;
                         }
-                printf("\nG:%d",C->q);
                 }
 }
 cout<<"\nSomatorio:"<<soma;
 cout<<"\nTamanho:"<<tamL;
 cout<<"\n H:"<<H;
 
+return rr;
 }
 
 
@@ -665,9 +647,9 @@ glist B;
 int v,y,i,j;
 link te;
 Lreq lr;
-
+lr=criavazia();
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file ("nsf3.txt");
+std::ifstream file ("att2.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
@@ -710,18 +692,18 @@ Ordem l,k;
 Lordena = randomiza(Lordena);
 Lordena = ordena(Lordena);
 
-/*mostrando a lista de requisiçoes ordenada*/
+/*mostrando a lista de requisiçoes ordenada
 for(k=Lordena->ini; k!=NULL; k=k->prox){
         cout << "\n\n\nOrigem: "<< k->I;
         cout << "\nDestino: " << k->O;
         cout << "\nTamanho: " << k->V;
-        }
+        }*/
 
-lr = kapov(Lordena, B,v,ad,lr);
-/*lr = gulosa(Lordena,B,v,lr);*/
+//lr = kapov(Lordena, B,v,ad,lr);
+lr = gulosa(Lordena,B,v,ad,lr);
 
 imprime_req(lr);
-
+cout<<"\nG:"<<B->q;
 
 
 
