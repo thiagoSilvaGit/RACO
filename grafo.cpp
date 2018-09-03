@@ -316,6 +316,7 @@ Resp dijkstra(int o, int f, Graph g)
           r->c = 0;
           r->next = NULL;
         }
+      delete Q;  
       return r;
     }
 
@@ -696,7 +697,7 @@ fr=cria();
 
 t_ini= time(NULL);
 
-while(tempo<=20){
+while(tempo<=30){
         B=crialista();
         B=NEWgnode(B,v,ad);
 
@@ -770,7 +771,8 @@ return fr;
 
 
 void criatxtK(Lrf R){
-int k,q,e,w,i;
+int k,q,w,i;
+float e;
 for(Rf a=R->ini;a!=NULL;a=a->prox){
         for(Rf b=a->prox;b!=NULL;b=b->prox){
                 if(a->qg > b->qg){
@@ -801,6 +803,9 @@ for(i=0;i<10;i++){
         file1<<"\nTotal de requisições:"<<a->tr;
         file1<<"\n\n";
         a=a->prox;
+        if(a==NULL){
+        break;
+        }
 }
 
 file1.close();
@@ -809,7 +814,8 @@ file1.close();
 
 
 void criatxtG(Lrf R){
-int k,q,e,w,i;
+int k,q,w,i;
+float e;
 for(Rf a=R->ini;a!=NULL;a=a->prox){
         for(Rf b=a->prox;b!=NULL;b=b->prox){
                 if(a->qg > b->qg){
@@ -831,15 +837,19 @@ for(Rf a=R->ini;a!=NULL;a=a->prox){
 }
 Rf a= R->ini;
 std::ofstream file1 ("dadosGbrasil.txt");
-file1<<"\nNumero de vertices:"<<R->V;
-file1<<"\n\n";
-for(i=0;i<10;i++){
-  file1<<"\nNumero de grafos:"<<a->qg;
-  file1<<"\nSomatorio dos caminhos:"<<a->sc;
-  file1<<"\nMedia dos caminhos:"<<a->mc;
-  file1<<"\nTotal de requisições:"<<a->tr;
-  file1<<"\n\n";
-  a=a->prox;
+        file1<<"\nNumero de vertices:"<<R->V;
+        file1<<"\n\n";
+        for(i=0;i<10;i++){
+        file1<<"\nNumero de grafos:"<<a->qg;
+        file1<<"\nSomatorio dos caminhos:"<<a->sc;
+        file1<<"\nMedia dos caminhos:"<<a->mc;
+        file1<<"\nTotal de requisições:"<<a->tr;
+        file1<<"\n\n";
+        a=a->prox;
+        if(a==NULL){
+                break;
+                }
+
 }
 
 file1.close();
@@ -903,10 +913,10 @@ Lordena = randomiza(Lordena);
 Lordena = ordena(Lordena);
 Lrf L;
 
-//L=Lkapov(Lordena,v,ad);
-//criatxtK(L);
-L=Lgulosa(Lordena,v,ad);
-criatxtG(L);
+L=Lkapov(Lordena,v,ad);
+criatxtK(L);
+//L=Lgulosa(Lordena,v,ad);
+//criatxtG(L);
 
 
 
