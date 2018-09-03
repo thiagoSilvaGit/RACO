@@ -5,6 +5,7 @@
 #include <conio>
 #include <queue>
 #include <fstream>
+#include <time.h>
 using namespace std;
 
 
@@ -18,6 +19,8 @@ typedef struct req *Req;
 typedef struct lreq *Lreq;
 typedef struct ordem *Ordem;
 typedef struct lord *Lord;
+typedef struct rf *Rf;
+typedef struct lrf *Lrf;
 Graph GRAPHinit(int V);
 void GRAPHinsertArc(Graph G,int V,int **ad);
 void desalocaMatriz(int ** r,int v);
@@ -85,14 +88,29 @@ struct req{
 };
 
 struct lreq{
+        int S;
         Req ini;
         };
+/*estrutura de  respostas finais*/
+struct rf{
+        int qg;
+        int sc;
+        float mc;
+        int tr;
+        Rf prox;
+};
+struct lrf{
+        Rf ini;
+        int V;
+};
+
 
 /*Funções para lista de resposta*/
 
 Lreq criavazia(){
         Lreq l = new struct lreq;
         l->ini = NULL;
+        l->S=0;
         return l;
 }
 
@@ -106,11 +124,16 @@ Lreq criareq(Lreq l, int i , int o , int id, Resp s,link z){
         r->r->next = z;
         r->prox = l->ini;
         l->ini = r;
+        l->S=l->S+s->V;
                 return l;
 
 }
 
-
+Lrf cria(){
+        Lrf r = new struct lrf;
+        r->ini = NULL;
+        return r;
+}
 
 
 /*funções para lista*/
@@ -440,6 +463,29 @@ while(aux != NULL ){
 
 delete l;
 }
+void desalocaLreq(Lreq l){
+Req aux=l->ini;
+Req del;
+
+while(aux != NULL ){
+        del = aux;
+        aux = aux->prox;
+        delete del ;
+}
+delete l;
+}
+void desalocaLrf(Lrf l){
+Rf aux=l->ini;
+Rf del;
+
+while(aux != NULL ){
+        del = aux;
+        aux = aux->prox;
+        delete del ;
+}
+
+delete l;
+}
 
 /*Randomizar a lista de requisiçoes*/
 Lord randomiza (Lord l){
@@ -576,7 +622,6 @@ for(l=k->ini;l!=NULL;l=l->prox){
                 if(road->c==1 && road->V <= H){           /*caso tenha caminho e seja menor que o H*/
                         exclui_aresta(aux->g, road);
                         l->C=0;
-                        soma=soma+road->V;
                         z= road->next;
                         rr = criareq(rr,l->I,l->O,aux->g->IG,road,z); /* */
                         }
@@ -633,23 +678,189 @@ for(l=k->ini;l!=NULL;l=l->prox){
                         }
                 }
 }
-cout<<"\nSomatorio:"<<soma;
-cout<<"\nTamanho:"<<tamL;
-cout<<"\n H:"<<H;
+
 
 return rr;
 }
 
 
 
-int main(){
+Lrf Lkapov(Lord Lordena, int v, int **ad){
+Lrf fr;
+float tempo;
 glist B;
-int v,y,i,j;
-link te;
 Lreq lr;
-lr=criavazia();
+time_t  t_ini, t_fim;
+
+fr=cria();
+
+t_ini= time(NULL);
+
+while(tempo<=20){
+        B=crialista();
+        B=NEWgnode(B,v,ad);
+
+        lr=criavazia();
+        lr = kapov(Lordena, B,v,ad,lr);
+        Rf R= new struct rf;
+
+        R->qg=B->q;
+        R->sc=lr->S;
+        R->mc= (float)R->sc/(float)tamL;
+        R->tr=tamL;
+        R->prox=fr->ini;
+        fr->ini=R;
+        fr->V=v;
+
+        Lordena = randomiza(Lordena);
+        Lordena = ordena(Lordena);
+
+        desalocaglist(B);
+        desalocaLreq(lr);
+        t_fim= time(NULL);
+        tempo= difftime(t_fim,t_ini);
+        cout<<"\nTempo:"<<tempo;
+}
+cout<<"\nAcabei";
+desalocaLord (Lordena);
+return fr;
+}
+
+
+Lrf Lgulosa(Lord Lordena, int v, int **ad){
+Lrf fr;
+float tempo;
+glist B;
+Lreq lr;
+time_t  t_ini, t_fim;
+
+fr=cria();
+
+t_ini= time(NULL);
+
+while(tempo<=20){
+        B=crialista();
+        B=NEWgnode(B,v,ad);
+
+        lr=criavazia();
+        lr = gulosa(Lordena, B,v,ad,lr);
+        Rf R= new struct rf;
+
+        R->qg=B->q;
+        R->sc=lr->S;
+        R->mc= (float)R->sc/(float)tamL;
+        R->tr=tamL;
+        R->prox=fr->ini;
+        fr->ini=R;
+        fr->V=v;
+
+        Lordena = randomiza(Lordena);
+        Lordena = ordena(Lordena);
+
+        desalocaglist(B);
+        desalocaLreq(lr);
+        t_fim= time(NULL);
+        tempo= difftime(t_fim,t_ini);
+        cout<<"\nTempo:"<<tempo;
+}
+cout<<"\nAcabei";
+desalocaLord (Lordena);
+return fr;
+}
+
+
+void criatxtK(Lrf R){
+int k,q,e,w,i;
+for(Rf a=R->ini;a!=NULL;a=a->prox){
+        for(Rf b=a->prox;b!=NULL;b=b->prox){
+                if(a->qg > b->qg){
+                k=b->qg;
+                q=b->sc;
+                e=b->mc;
+                w=b->tr;
+                b->qg=a->qg;
+                b->sc=a->sc;
+                b->mc=a->mc;
+                b->tr=a->tr;
+                a->qg=k;
+                a->sc=q;
+                a->mc=e;
+                a->tr=w;
+                }
+                }
+
+}
+Rf a= R->ini;
+std::ofstream file1 ("dadosKbrasil.txt");
+file1<<"\nNumero de vertices:"<<R->V;
+file1<<"\n\n";
+for(i=0;i<10;i++){
+        file1<<"\nNumero de grafos:"<<a->qg;
+        file1<<"\nSomatorio dos caminhos:"<<a->sc;
+        file1<<"\nMedia dos caminhos:"<<a->mc;
+        file1<<"\nTotal de requisições:"<<a->tr;
+        file1<<"\n\n";
+        a=a->prox;
+}
+
+file1.close();
+}
+
+
+
+void criatxtG(Lrf R){
+int k,q,e,w,i;
+for(Rf a=R->ini;a!=NULL;a=a->prox){
+        for(Rf b=a->prox;b!=NULL;b=b->prox){
+                if(a->qg > b->qg){
+                k=b->qg;
+                q=b->sc;
+                e=b->mc;
+                w=b->tr;
+                b->qg=a->qg;
+                b->sc=a->sc;
+                b->mc=a->mc;
+                b->tr=a->tr;
+                a->qg=k;
+                a->sc=q;
+                a->mc=e;
+                a->tr=w;
+                }
+                }
+
+}
+Rf a= R->ini;
+std::ofstream file1 ("dadosGbrasil.txt");
+file1<<"\nNumero de vertices:"<<R->V;
+file1<<"\n\n";
+for(i=0;i<10;i++){
+  file1<<"\nNumero de grafos:"<<a->qg;
+  file1<<"\nSomatorio dos caminhos:"<<a->sc;
+  file1<<"\nMedia dos caminhos:"<<a->mc;
+  file1<<"\nTotal de requisições:"<<a->tr;
+  file1<<"\n\n";
+  a=a->prox;
+}
+
+file1.close();
+}
+
+
+
+
+
+
+int main(){
+int v,y,i,j,k,q,w;
+float e;
+link te;
+
+
+
+
+
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file ("att2.txt");
+std::ifstream file ("brasil.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
@@ -684,33 +895,24 @@ for(i=0;i<v;i++){
 file.close();
 
 
-B=crialista();
-B=NEWgnode(B,v,ad);
+
 
 Lord Lordena= requisicoes(v,r,ad);
-Ordem l,k;
+Ordem l;
 Lordena = randomiza(Lordena);
 Lordena = ordena(Lordena);
+Lrf L;
 
-/*mostrando a lista de requisiçoes ordenada
-for(k=Lordena->ini; k!=NULL; k=k->prox){
-        cout << "\n\n\nOrigem: "<< k->I;
-        cout << "\nDestino: " << k->O;
-        cout << "\nTamanho: " << k->V;
-        }*/
-
-//lr = kapov(Lordena, B,v,ad,lr);
-lr = gulosa(Lordena,B,v,ad,lr);
-
-imprime_req(lr);
-cout<<"\nG:"<<B->q;
+//L=Lkapov(Lordena,v,ad);
+//criatxtK(L);
+L=Lgulosa(Lordena,v,ad);
+criatxtG(L);
 
 
 
 
 
-desalocaglist(B);
-desalocaLord (Lordena);
+desalocaLrf(L);
 desalocaMatriz(r,v);
 desalocaMatriz(ad,v);
 getch();
