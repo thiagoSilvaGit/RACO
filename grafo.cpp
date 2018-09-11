@@ -9,7 +9,7 @@
 using namespace std;
 
 
-typedef struct queue *QUEUE;
+
 typedef struct node *link;
 typedef struct gnode *bins;
 typedef struct Glist *glist;
@@ -102,6 +102,7 @@ struct rf{
 struct lrf{
         Rf ini;
         int V;
+        int A;
 };
 
 
@@ -159,7 +160,7 @@ glist crialista(){
 
 
 /*função para criar um novo nó*/
-static link NEWnode( int w, link next){
+link NEWnode( int w, link next){
         link a= new struct node ;
         a->w=w;
         a->next=next;
@@ -168,7 +169,7 @@ static link NEWnode( int w, link next){
 
 
 /*funçao de criar um novo grafo*/
-static glist NEWgnode(glist x,int v,int **adt){
+glist NEWgnode(glist x,int v,int **adt){
         bins novo = new struct gnode;
         novo->next = NULL;
         novo->g = GRAPHinit(v);
@@ -233,9 +234,9 @@ Graph GRAPHinit(int V){
 
         return;
 }
-
-
  typedef struct link2 Link2;
+
+
 
 struct link2
   {
@@ -316,23 +317,42 @@ Resp dijkstra(int o, int f, Graph g)
           r->c = 0;
           r->next = NULL;
         }
-      delete Q;  
+
+               delete []Q;
       return r;
     }
 
 
 
+
 /*funçao para excluir o caminho utilizado*/
 void exclui_aresta(Graph g , Resp r){
-        link i,j,k;
+        link i,j,k,t;
         int m;
+        int ka;
+
         for(i=r->next, j= r->next->next; j!=NULL;i=j,j=j->next){
                 m=i->w;
+
                 for(k=g->adj[m-1]; k!=NULL; k=k->next){
-                        if(k->w== j->w){
+                        t=k->next;
+                        if(k->w== j->w || t->w == j->w){
+                                if(g->adj[m-1]==k && k->w==j->w){
+
                                 link aux = k;
-                                g->adj[m-1]= k ->next;
-                                free (aux);
+                                g->adj[m-1]=k->next;
+                                delete aux;}
+                                else if(t->w == j->w && t->next!=NULL){
+                                        link aux = t;
+                                        k->next=t->next;
+                                        delete aux;
+                                }
+                                else if(t->w == j->w && t->next==NULL ){
+                                        link aux = t;
+                                        k->next=NULL;
+                                        delete aux;
+
+                                }
                                 break;
                                 }
                 }
@@ -415,6 +435,7 @@ while(aux != NULL ){
         delete del ;
 }
 delete aux;
+
 }
 
 /*Desalocar grafo*/
@@ -427,7 +448,7 @@ for (i=0;i<v;i++){
         desalocalink(g->adj[i]);
 
 }
-delete g->adj;
+delete []g->adj;
 
 delete g;
 
@@ -455,7 +476,6 @@ delete B;
 void desalocaLord(Lord l){
 Ordem aux=l->ini;
 Ordem del;
-
 while(aux != NULL ){
         del = aux;
         aux = aux->prox;
@@ -464,10 +484,19 @@ while(aux != NULL ){
 
 delete l;
 }
+void desalocaResp(Resp r){
+
+desalocalink(r->next);
+
+delete r;
+}
 void desalocaLreq(Lreq l){
+
 Req aux=l->ini;
 Req del;
-
+for(Req i=l->ini;i!=NULL;i=i->prox){
+desalocaResp(i->r);
+}
 while(aux != NULL ){
         del = aux;
         aux = aux->prox;
@@ -492,7 +521,7 @@ delete l;
 Lord randomiza (Lord l){
 int * rd = new int[tamL];
 int i,x,aux;
-cout<<"\nVetor sem ordenar\n\n";
+
 for(i=0;i<tamL;i++){
         rd[i] = i+1; /* inicializa o vetor com as posicões da lista*/
 }
@@ -506,6 +535,7 @@ for(i=0;i<tamL ;i++){
 Lord Vord = new struct lord;
 Vord->ini=NULL;
 Ordem j; int cnt;
+int AR=0;
 for(i=0;i<tamL;i++){
         x= rd[i]; /*vai inserir a posição X da lista na nova lista*/
 
@@ -553,7 +583,7 @@ for(i=l->ini;i!=NULL;i=i->prox){
 
 }
 H=l->ini->V;
-cout<<"\nH: "<<H;
+
 
 return l;
 }
@@ -611,16 +641,17 @@ int i,j;
 link te;
 Ordem l;
 int soma=0;
+Resp road;
 for(l=k->ini;l!=NULL;l=l->prox){
         i=l->I;
         j=l->O;
-        Resp road = new struct resp;
+        //Resp road = new struct resp;
         road = NULL;
         aux=A->ini;
         link z;
         while(l->C){
                 road=dijkstra(i,j,aux->g);
-                if(road->c==1 && road->V <= H){           /*caso tenha caminho e seja menor que o H*/
+                if(road->V <= H){           /*caso tenha caminho e seja menor que o H*/
                         exclui_aresta(aux->g, road);
                         l->C=0;
                         z= road->next;
@@ -666,6 +697,7 @@ for(l=k->ini;l!=NULL;l=l->prox){
                 if(road->c==1){
                         exclui_aresta(aux->g, road);
                         l->C=0;
+
                         //soma=soma+road->V;
                         z= road->next;
                         rr = criareq(rr,l->I,l->O,aux->g->IG,road,z);
@@ -686,7 +718,7 @@ return rr;
 
 
 
-Lrf Lkapov(Lord Lordena, int v, int **ad){
+Lrf Lkapov(Lord Lordena, int v, int **ad, int **r){
 Lrf fr;
 float tempo;
 glist B;
@@ -697,14 +729,13 @@ fr=cria();
 
 t_ini= time(NULL);
 
-while(tempo<=30){
+while(tempo<270){
         B=crialista();
         B=NEWgnode(B,v,ad);
 
         lr=criavazia();
         lr = kapov(Lordena, B,v,ad,lr);
         Rf R= new struct rf;
-
         R->qg=B->q;
         R->sc=lr->S;
         R->mc= (float)R->sc/(float)tamL;
@@ -712,6 +743,7 @@ while(tempo<=30){
         R->prox=fr->ini;
         fr->ini=R;
         fr->V=v;
+        fr->A=B->ini->g->A;
 
         Lordena = randomiza(Lordena);
         Lordena = ordena(Lordena);
@@ -719,10 +751,10 @@ while(tempo<=30){
         desalocaglist(B);
         desalocaLreq(lr);
         t_fim= time(NULL);
-        tempo= difftime(t_fim,t_ini);
-        cout<<"\nTempo:"<<tempo;
+        tempo=difftime(t_fim,t_ini);
 }
-cout<<"\nAcabei";
+cout<<"\nTempo:"<<tempo;
+
 desalocaLord (Lordena);
 return fr;
 }
@@ -739,7 +771,7 @@ fr=cria();
 
 t_ini= time(NULL);
 
-while(tempo<=20){
+while(tempo<300){
         B=crialista();
         B=NEWgnode(B,v,ad);
 
@@ -761,10 +793,10 @@ while(tempo<=20){
         desalocaglist(B);
         desalocaLreq(lr);
         t_fim= time(NULL);
-        tempo= difftime(t_fim,t_ini);
+        tempo=difftime(t_fim,t_ini);
         cout<<"\nTempo:"<<tempo;
 }
-cout<<"\nAcabei";
+
 desalocaLord (Lordena);
 return fr;
 }
@@ -793,8 +825,9 @@ for(Rf a=R->ini;a!=NULL;a=a->prox){
 
 }
 Rf a= R->ini;
-std::ofstream file1 ("dadosKbrasil.txt");
+std::ofstream file1 ("dadosKgiul.txt");
 file1<<"\nNumero de vertices:"<<R->V;
+file1<<"\nNumero de arestas:"<<R->A;
 file1<<"\n\n";
 for(i=0;i<10;i++){
         file1<<"\nNumero de grafos:"<<a->qg;
@@ -870,7 +903,7 @@ link te;
 
 
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file ("brasil.txt");
+std::ifstream file ("giul.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
@@ -905,7 +938,7 @@ for(i=0;i<v;i++){
 file.close();
 
 
-
+srand(time(NULL));
 
 Lord Lordena= requisicoes(v,r,ad);
 Ordem l;
@@ -913,7 +946,7 @@ Lordena = randomiza(Lordena);
 Lordena = ordena(Lordena);
 Lrf L;
 
-L=Lkapov(Lordena,v,ad);
+L=Lkapov(Lordena,v,ad,r);
 criatxtK(L);
 //L=Lgulosa(Lordena,v,ad);
 //criatxtG(L);
@@ -925,6 +958,7 @@ criatxtK(L);
 desalocaLrf(L);
 desalocaMatriz(r,v);
 desalocaMatriz(ad,v);
+cout<<"\nAcabei";
 getch();
 
         return 0;
