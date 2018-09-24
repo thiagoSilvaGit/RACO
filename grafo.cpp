@@ -7,6 +7,53 @@
 #include <fstream>
 #include <time.h>
 using namespace std;
+/**
+*@file grafo.cpp
+*Arquivo documentado
+*/
+
+
+
+
+/** @var typedef struct node *link
+    *Estrutura node agora é chamada de link.
+*/
+/** @var typedef struct gnode *bins
+    *Estrutura gnode agora é chamada de bins.
+*/
+/** @var typedef struct Glist *glist
+    *Estrutura glist agora é chamada de Glist.
+*/
+/** @var typedef struct graph *Graph
+    *Estrutura graph agora é chamada de Graph.
+*/
+/** @var typedef struct resp *Resp
+    *Estrutura resp agora é chamada de Resp.
+*/
+/** @var typedef struct req *Req
+    *Estrutura req agora é chamada de Req.
+*/
+/** @var typedef struct lreq *Lreq
+    *Estrutura lreq agora é chamada de Lreq.
+*/
+/** @var typedef struct ordem *Ordem
+    *Estrutura ordem agora é chamada de Ordem.
+*/
+/** @var typedef struct lord *Lord
+    *Estrutura lord agora é chamada de Lord.
+*/
+/** @var typedef struct rf *Rf
+    *Estrutura rf agora é chamada de Rf.
+*/
+/** @var typedef struct lrf *Lrf
+    *Estrutura lrf agora é chamada de Lrf.
+*/
+/** @var int H
+    *Variavel H global que representa o maior menor caminho de todas as requisições.
+*/
+/** @var int tamL
+    *Variavel tamL que inicializada com o valor 0, e representa quantas requisições temos em uma instancia.
+*/
 
 
 
@@ -27,93 +74,167 @@ void desalocaMatriz(int ** r,int v);
 int H,tamL=0;
 
 
-/*estruturas*/
 
-/*struct dos grafos*/
+
+/**
+*Estrutura dos grafos
+*/
 struct gnode{
-        Graph g;       /*Estruras de grafos contendo um grafo e o prximo*/
+        /**
+        *Grafo
+        */
+        Graph g;
+        /**
+        *Ponteiro para o proximo grafo*/
         bins next;
 };
 
 
-/*strut da lista de grafos*/
+/**
+*Estrutura da lista de grafos
+*/
 struct Glist{
-        bins ini;  /*Grafo de inicio da lista*/
-        bins fim;  /*Grafo de fim da lista*/
-        int q;     /*Quantidade de grafos na lista*/
+        /**
+        *Ponteiro que aponta para o inicio da lista de grafos.
+        */
+        bins ini;
+        /**
+        *Ponteiro que aponta para o fim da lista de grafos.
+        */
+        bins fim;
+
+        int q;/**< Valor de numeros de grafos que foram criados.*/
 };
 
 
 
-/*struct do nó*/
+/**
+*Estrutura node
+*/
 struct node{
-        int w;          /*Indice do nó*/
-        link next;      /*link para o proximo nó*/
+        int w; /**<Indice do nó.*/
+        /**
+        *Ponteiro para o proximo nó.
+        */
+        link next;
 };
 
 
-/*struct de requisiçao*/
+/**
+*Estrutura de requisiçao.
+*/
 struct ordem{
-        int I;       /*Nó de inicio da requisição*/
-        int O;       /*Nó de destino da requisição*/
-        int V;       /*Tamanho da requisição*/
-        bool C;      /*0 quando a requisição for atendida e 1 para quando nao for atendida*/
-        Ordem prox;  /**/
+        int I;      /**<Indice do nó de origem da requisição.*/
+        int O;       /**<Indice Nó de destino da requisição*/
+        int V;       /**<Tamanho do menor camiho encontrado na requisição*/
+        bool C;      /**<1 quando a requisição for atendida e 0 para quando nao for atendida*/
+        /**
+        *Ponteiro para a proxima requisição
+        */
+        Ordem prox;
         };
 
 struct lord{
-        Ordem ini; /**/
+        /**
+        *Ponteiro para o inicio das requisições
+        */
+        Ordem ini;
         };
-/*struct de grafo*/
+/**
+*Estrutura de grafo
+*/
 struct graph{
-        int V;      /*numero de vertices do grafo*/
-        int A;      /*numero de arestas do grafo*/
-        int IG;     /*indice do grafo*/
-        link *adj;  /*lista de adjacentes do grafo*/
+        int V;      /**<Numero de vertices do grafo.*/
+        int A;      /**<Numero de arestas do grafo.*/
+        int IG;     /**<Indice do grafo na lista de grafos.*/
+        /**
+        *Link de adjacentes do nó
+        */
+        link *adj;
 };
-/*struct de resposta*/
+/**
+*Estrutura de resposta
+*/
 struct resp{
-        int V;            /*tamanho do caminho encontrado*/
-        bool c;           /*Se o caminho foi encontrado ou nao*/
-        link next;        /*Lista com os nós do caminho encontrado*/
+        int V;            /**<Tamanho do caminho encontrado.*/
+        bool c;           /**<1 se o caminho foi encontrado e 0 se não foi.*/
+        /**
+        *Ponteiro para o caminho encontrado
+        */
+        link next;
 };
 
-/*lista de resposta*/
+/**
+*Estrutura da lista de respostas
+*/
 struct req{
-        int o;
-        int f;
-        int ig;
+        int o; /**<Nó de origem.*/
+        int f; /**<Nó de destino*/
+        int ig;/**<Indice do grafo onde a requisição foi alocada */
+        /**
+        *Ponteiro para a estrutura contendo o caminho e o tamanho do caminho encontrado
+        */
         Resp r;
+        /**
+        *Ponteiro para a proxima resposta.
+        */
         Req prox;
 };
 
 struct lreq{
-        int S;
+        int S;  /**<Somatorio dos caminhos encontrados.*/
+        /**
+        *Ponteiro paro o inicio da lista de respostas
+        */
         Req ini;
         };
-/*estrutura de  respostas finais*/
+/**
+*Estrutura de  respostas finais
+*/
 struct rf{
-        int qg;
-        int sc;
-        float mc;
-        int tr;
+        int qg; /**<Quantidade de grafos utilizados.*/
+        int sc; /**<Somatorios dos caminhos encontrados.*/
+        float mc; /**<Tamanho medio dos caminhos.*/
+        int tr;  /**<Numero total de requisições.*/
+        /**
+        *Ponteiro para a proxima resposta
+        */
         Rf prox;
 };
+
+
 struct lrf{
+        /**
+        *Ponteiro para o Inicio da lista de respostas
+        */
         Rf ini;
-        int V;
-        int A;
+        int V; /**<Numero de vertices do grafo.*/
+        int A; /**<Numero de arestas do grafo.*/
 };
 
 
 /*Funções para lista de resposta*/
-
+/**
+*Função para criar uma lista vazia de Respostas de cada requisicao.
+*@return de uma lista vazia
+*/
 Lreq criavazia(){
         Lreq l = new struct lreq;
         l->ini = NULL;
         l->S=0;
         return l;
 }
+/**
+*@fn Lreq criareq(Lreq l, int i , int o , int id, Resp s,link z)
+*Funcao para criar a resposta dos caminhos encotrandos
+*@param l Lista de respostas
+*@param i Inicio da requisicao
+*@param o Destino da requisicao
+*@param id Indice do grafo que a requisicao foi alocado
+*@param s Lista com a resposta da requisicao
+*@param z Lista com o caminho da requisicao
+*@return Lista Lreq que aponta para o inicio das respostas
+*/
 
 Lreq criareq(Lreq l, int i , int o , int id, Resp s,link z){
 
@@ -130,6 +251,13 @@ Lreq criareq(Lreq l, int i , int o , int id, Resp s,link z){
 
 }
 
+/**
+*@fn Lrf cria()
+*Funcao para inicializar a lista com as respostas finais
+*@return lista de respostas finais vazia
+*/
+
+
 Lrf cria(){
         Lrf r = new struct lrf;
         r->ini = NULL;
@@ -137,9 +265,12 @@ Lrf cria(){
 }
 
 
-/*funções para lista*/
-
-/*função para verificar se a lista está vazia*/
+/**
+*@fn int glist_vazia(glist l)
+*Funcao para vereficar se a lista de grafos esta vazia
+*@param l Lista de grafos
+*@return 1 se estiver vazia e 0 se nao estiver
+*/
 int glist_vazia(glist l){
         if(l->ini == NULL ){
                 if(l->fim == NULL)
@@ -149,7 +280,11 @@ int glist_vazia(glist l){
                 return 0;}
 
 
-/*função para criar lista*/
+/**
+*@fn glist crialista()
+*Funcao para criar uma lista de grafos
+*@return 1 se estiver vazia e 0 se nao estiver
+*/
 glist crialista(){
         glist l = new struct Glist;
         l->ini =NULL;
@@ -159,7 +294,13 @@ glist crialista(){
 }
 
 
-/*função para criar um novo nó*/
+/**
+*@fn link NEWnode( int w, link next)
+*Funcao para criar um novo no
+*@param w Indice do no a ser criado
+*@param next Endereco do proximo no do grafo
+*@return Endereco do novo no criado
+*/
 link NEWnode( int w, link next){
         link a= new struct node ;
         a->w=w;
@@ -168,7 +309,14 @@ link NEWnode( int w, link next){
 }
 
 
-/*funçao de criar um novo grafo*/
+/**
+*@fn NEWgnode(glist x,int v,int **adt)
+*Funcao para criar um novo grafo
+*@param x Lista para armazenar todos os grafos criados
+*@param v Numero de vertices
+*@param adt Matriz contendo os adjacentes
+*@return Lista com os grafos incluindo o novo que foi criado
+*/
 glist NEWgnode(glist x,int v,int **adt){
         bins novo = new struct gnode;
         novo->next = NULL;
@@ -194,7 +342,12 @@ glist NEWgnode(glist x,int v,int **adt){
 }
 
 
-/*iniciar um grafo*/
+/**
+*@fn Graph GRAPHinit(int V)
+*Funcao para iniciar um grafo
+*@param V Numero de vertices
+*@return Grafo inicializado
+*/
 Graph GRAPHinit(int V){
         Graph G = new struct graph;
         G->V=V;
@@ -207,8 +360,14 @@ Graph GRAPHinit(int V){
         }
 
 
-/*Função para inserir os arcos*/
- void GRAPHinsertArc(Graph G, int V,int **ad){
+/**
+*@fn void GRAPHinsertArc(Graph G, int V,int **ad)
+*Funcao para inserir os arcos no grafo
+*@param G Grafo
+*@param V Numero de vertices
+*@param ad Matriz de ajacentes
+*/
+void GRAPHinsertArc(Graph G, int V,int **ad){
         int i,j;
         link aux;
 
@@ -234,16 +393,31 @@ Graph GRAPHinit(int V){
 
         return;
 }
+
+/** @var typedef struct link2 Link2
+    *Estrutura link2 agora é chamada de Link2.
+*/
  typedef struct link2 Link2;
 
-
+/**
+*Estrutura usada na dijkstra
+*/
 
 struct link2
   {
-    int dist;      /*valor da distancia do no atual para nó de inicio*/
-    int visitado;  /*indicar se o nó foi visitado ou não*/
-    int anterior;  /*indice do nó anterior*/
+    int dist;      /**<Valor da distancia do no atual para nó de inicio*/
+    int visitado;  /**<Indicar se o nó foi visitado ou não*/
+    int anterior;  /**<Indice do nó anterior*/
   };
+
+/**
+*@fn Resp dijkstra(int o, int f, Graph g)
+*Funcao para achar o menor caminho
+*@param o No de inicio
+*@param f No de destino
+*@param g Grafo
+*@return Retorna uma lista resp com o caminho encontrado
+*/
 
 Resp dijkstra(int o, int f, Graph g)
   {
@@ -321,11 +495,12 @@ Resp dijkstra(int o, int f, Graph g)
                delete []Q;
       return r;
     }
-
-
-
-
-/*funçao para excluir o caminho utilizado*/
+/**
+*@fn exclui_aresta(Graph g , Resp r)
+*Funcao para excluir aresta utilizada
+*@param g Grafo no qual sera excluida a aresta
+*@param r Arestas utilizadas
+*/
 void exclui_aresta(Graph g , Resp r){
         link i,j,k,t;
         int m;
@@ -359,7 +534,14 @@ void exclui_aresta(Graph g , Resp r){
         }
 
 }
-/*criando estrutura de requisiçoes*/
+/**
+*@fn requisicoes(int V,int **r,int **ad)
+*Funcao que calculo o caminho minimo das requisicoes e cria lista de requisicoes
+*@param V Numero de vertices
+*@param r Matriz contendo as requisiçoes
+*@param ad Matriz de adjacentes
+*@return Lista de requisicoes
+*/
 
 Lord requisicoes(int V,int **r,int **ad){
 glist O;
@@ -425,7 +607,12 @@ for(i=0;i<V;i++){
 return Vord;
 }
 
-/*desaloca link*/
+/**
+*@fn desalocalink(link a)
+*Funcao para desalocar lista de inteiros(link).
+*@param a Lista que vai desalocada.
+*/
+
 void desalocalink(link a){
 link aux = a;
 link del;
@@ -435,10 +622,14 @@ while(aux != NULL ){
         delete del ;
 }
 delete aux;
-
 }
 
-/*Desalocar grafo*/
+/**
+*@fn desalocaGrafo(Graph g, int v)
+*Funcao para desalocar grafo .
+*@param g Grafo a ser desalocado.
+*@param v Numero de vertices.
+*/
 
 desalocaGrafo(Graph g, int v){
 
@@ -451,10 +642,13 @@ for (i=0;i<v;i++){
 delete []g->adj;
 
 delete g;
-
 }
 
-/*Desalocar lista de grafo*/
+/**
+*@fn desalocaglist(glist B)
+*Funcao para desalocar lista de grafo .
+*@param B lista de grafo a ser desalocado.
+*/
 
 desalocaglist(glist B){
 bins aux,del;
@@ -472,7 +666,11 @@ delete B;
 }
 
 
-/* Desalocar a Lord*/
+/**
+*@fn desalocaLord(Lord l)
+*Funcao para desalocar lista de requisicao .
+*@param l lista de requisicao a ser desalocada.
+*/
 void desalocaLord(Lord l){
 Ordem aux=l->ini;
 Ordem del;
@@ -483,17 +681,30 @@ while(aux != NULL ){
 }
 
 delete l;
+
 }
+/**
+*@fn desalocaResp(Resp r)
+*Funcao para desalocar a requisicao .
+*@param r Requisicao a ser desalocada.
+*/
 void desalocaResp(Resp r){
 
 desalocalink(r->next);
 
 delete r;
 }
-void desalocaLreq(Lreq l){
 
+
+/**
+*@fn desalocaLreq(Lreq l)
+*Funcao para desalocar a lista de respostas .
+*@param l Lista de respostas a ser desalocada.
+*/
+void desalocaLreq(Lreq l){
 Req aux=l->ini;
 Req del;
+
 for(Req i=l->ini;i!=NULL;i=i->prox){
 desalocaResp(i->r);
 }
@@ -501,23 +712,36 @@ while(aux != NULL ){
         del = aux;
         aux = aux->prox;
         delete del ;
+
 }
 delete l;
+
 }
+
+/**
+*@fn desalocaLrf(Lrf l)
+*Funcao para desalocar a lista de respostas final .
+*@param l Lista de respostas final a ser desalocada.
+*/
 void desalocaLrf(Lrf l){
 Rf aux=l->ini;
 Rf del;
-
 while(aux != NULL ){
         del = aux;
         aux = aux->prox;
         delete del ;
+
 }
 
 delete l;
 }
 
-/*Randomizar a lista de requisiçoes*/
+/**
+*@fn Lord randomiza (Lord l)
+*Funcao para que randomiza a lista de requisicao.
+*@param l Lista de requisicao a ser randomizada.
+*@return Retorna a lista de requisicao randomizada
+*/
 Lord randomiza (Lord l){
 int * rd = new int[tamL];
 int i,x,aux;
@@ -560,7 +784,12 @@ return Vord;   /*retorna a nova lista randomizada*/
 }
 
 
-/*Ordenando a lista de requisiçoes*/
+/**
+*@fn Lord ordena(Lord l)
+*Funcao para que ordenada a lista de requisicao.
+*@param l Lista de requisicao a ser ordenada.
+*@return Retorna a lista de requisicao ordenada.
+*/
 Lord ordena(Lord l){
 int r,t,y;
 Ordem k,i;
@@ -588,7 +817,12 @@ H=l->ini->V;
 return l;
 }
 
-/*desaloca matriz*/
+/**
+*@fn desalocaMatriz(int ** r,int v)
+*Funcao para que desaloca uma lista de inteiros.
+*@param r Matriz a ser desalocada.
+*@param v Dimensao da matriz.
+*/
 
 void desalocaMatriz(int ** r,int v){
 int i;
@@ -601,7 +835,11 @@ delete []r;
 }
 
 
-
+/**
+*@fn imprime_link(link a)
+*Funcao para imprimir lista de inteiros(link).
+*@param a Lista de Inteiros.
+*/
 void imprime_link(link a){
  link aux;
  cout << "\n Caminho : ";
@@ -609,12 +847,21 @@ void imprime_link(link a){
         cout << " " << aux->w   ;
 }
 
+/**
+*@fn imprime_resp (Resp r)
+*Funcao para imprimir resposta.
+*@param r Respostas.
+*/
 void imprime_resp (Resp r){
 cout << "\nTamanho do caminho : "<< r->V ;
 imprime_link(r->next);
 }
 
-
+/**
+*@fn imprime_req (Lreq l)
+*Funcao para imprimir lista de resposta.
+*@param l Lista de respostas.
+*/
 void imprime_req(Lreq l){
 int soma=0;
 Req aux;
@@ -634,7 +881,16 @@ cout<<"\nH:"<<H;
 
 
 
-/*metodo kapov*/
+/**
+*@fn kapov(Lord k,glist A,int v,int **ad,Lreq rr)
+*Funcao que executa o metodo desenvolvido por Kapov.
+*@param k Lista de requisicao ordenada.
+*@param A Lista de grafos.
+*@param v Numero de vertices.
+*@param ad Matriz de adjacencia.
+*@param rr Lista de respostas.
+*@return Lista de resposta
+*/
 Lreq kapov(Lord k,glist A,int v,int **ad,Lreq rr){
 bins aux;
 int i,j;
@@ -677,7 +933,16 @@ return rr;
 
 
 
-
+/**
+*@fn gulosa(Lord k,glist A,int v,int **ad,Lreq rr)
+*Funcao que executa o metodo guloso.
+*@param k Lista de requisicao ordenada.
+*@param A Lista de grafos.
+*@param v Numero de vertices.
+*@param ad Matriz de adjacencia.
+*@param rr Lista de respostas.
+*@return Lista de resposta
+*/
 Lreq gulosa(Lord k,glist C,int V,int **ad,Lreq rr){
 bins aux;
 int i,j;
@@ -717,10 +982,18 @@ return rr;
 }
 
 
-
+/**
+*@fn Lkapov(Lord Lordena, int v, int **ad, int **r)
+*Funcao que cria a lista de resposta final.
+*@param Lordena Lista de requisicao ordenada.
+*@param v Numero de vertices.
+*@param ad Matriz de adjacencia.
+*@param r Matriz de requisicao.
+*@return Lista final de resposta
+*/
 Lrf Lkapov(Lord Lordena, int v, int **ad, int **r){
 Lrf fr;
-float tempo;
+float tempo=0;
 glist B;
 Lreq lr;
 time_t  t_ini, t_fim;
@@ -729,7 +1002,7 @@ fr=cria();
 
 t_ini= time(NULL);
 
-while(tempo<270){
+while(tempo<300){
         B=crialista();
         B=NEWgnode(B,v,ad);
 
@@ -755,11 +1028,20 @@ while(tempo<270){
 }
 cout<<"\nTempo:"<<tempo;
 
+
 desalocaLord (Lordena);
 return fr;
 }
 
-
+/**
+*@fn Lgulosa(Lord Lordena, int v, int **ad, int **r)
+*Funcao que cria a lista de resposta final.
+*@param Lordena Lista de requisicao ordenada.
+*@param v Numero de vertices.
+*@param ad Matriz de adjacencia.
+*@param r Matriz de requisicao.
+*@return Lista final de resposta
+*/
 Lrf Lgulosa(Lord Lordena, int v, int **ad){
 Lrf fr;
 float tempo;
@@ -801,8 +1083,14 @@ desalocaLord (Lordena);
 return fr;
 }
 
+/**
+*@fn criatxtK(Lrf R)
+*Funcao que cria arquivo .txt com as respostas.
+*@param R Lista de resposta final.
 
+*/
 void criatxtK(Lrf R){
+
 int k,q,w,i;
 float e;
 for(Rf a=R->ini;a!=NULL;a=a->prox){
@@ -825,7 +1113,7 @@ for(Rf a=R->ini;a!=NULL;a=a->prox){
 
 }
 Rf a= R->ini;
-std::ofstream file1 ("dadosKgiul.txt");
+std::ofstream file1 ("dadosKbrasil.txt");
 file1<<"\nNumero de vertices:"<<R->V;
 file1<<"\nNumero de arestas:"<<R->A;
 file1<<"\n\n";
@@ -845,7 +1133,12 @@ file1.close();
 }
 
 
+/**
+*@fn criatxtG(Lrf R)
+*Funcao que cria arquivo .txt com as respostas.
+*@param R Lista de resposta final.
 
+*/
 void criatxtG(Lrf R){
 int k,q,w,i;
 float e;
@@ -892,7 +1185,7 @@ file1.close();
 
 
 
-
+/**Main*/
 int main(){
 int v,y,i,j,k,q,w;
 float e;
@@ -903,7 +1196,7 @@ link te;
 
 
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file ("giul.txt");
+std::ifstream file ("brasil.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
@@ -938,7 +1231,7 @@ for(i=0;i<v;i++){
 file.close();
 
 
-srand(time(NULL));
+srand(time(0));
 
 Lord Lordena= requisicoes(v,r,ad);
 Ordem l;
