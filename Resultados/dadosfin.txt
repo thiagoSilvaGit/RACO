@@ -1,0 +1,10 @@
+
+Numero de vertices:31
+Numero de arestas:102
+
+
+Numero de grafos:47
+Somatorio dos caminhos:3602
+Media dos caminhos:3.87312
+Total de requisições:930
+

@@ -71,7 +71,7 @@ typedef struct lrf *Lrf;
 Graph GRAPHinit(int V);
 void GRAPHinsertArc(Graph G,int V,int **ad);
 void desalocaMatriz(int ** r,int v);
-int H,tamL=0;
+int H=0,tamL=0,gu=INT_MAX;
 
 
 
@@ -126,7 +126,8 @@ struct node{
 struct ordem{
         int I;      /**<Indice do nó de origem da requisição.*/
         int O;       /**<Indice Nó de destino da requisição*/
-        int V;       /**<Tamanho do menor camiho encontrado na requisição*/
+        int V;      /**<Tamanho do menor camiho encontrado na requisição*/
+        int F;      /** <Fluxo maximo da requisicao */
         bool C;      /**<1 quando a requisição for atendida e 0 para quando nao for atendida*/
         /**
         *Ponteiro para a proxima requisição
@@ -591,6 +592,7 @@ for(i=0;i<V;i++){
                                 OR->O=j+1;
                                 OR->V=ord->V;
                                 OR->C=1;
+                                OR->F=0;
                                 OR->prox=Vord->ini;
                                 Vord->ini = OR;
                                 rq[i][j]--;
@@ -726,13 +728,14 @@ delete l;
 void desalocaLrf(Lrf l){
 Rf aux=l->ini;
 Rf del;
-while(aux != NULL ){
+/*while(aux != NULL ){
         del = aux;
-        aux = aux->prox;
+        if(aux->prox!=NULL){
+        aux = aux->prox;}
         delete del ;
 
-}
-
+}*/
+delete aux;
 delete l;
 }
 
@@ -791,7 +794,7 @@ return Vord;   /*retorna a nova lista randomizada*/
 *@return Retorna a lista de requisicao ordenada.
 */
 Lord ordena(Lord l){
-int r,t,y;
+int r,t,y,f;
 Ordem k,i;
 for(i=l->ini;i!=NULL;i=i->prox){
         for(Ordem j= i->prox;j!=NULL;j=j->prox){
@@ -801,12 +804,15 @@ for(i=l->ini;i!=NULL;i=i->prox){
                         r=i->I;
                         t=i->O;
                         y=i->V;
+                        f=i->F;
                         i->I=j->I;
                         i->O=j->O;
                         i->V=j->V;
+                        i->F=j->F;
                         j->I = r;
                         j->O = t;
                         j->V = y;
+                        j->F=f;
                         }
                 }
 
@@ -816,7 +822,120 @@ H=l->ini->V;
 
 return l;
 }
+/**
+*@fn Lord fmax(Lord l,int **ad,int V)
+*Funcao para encontrar o fluxo maximo de cada requisicao.
+*@param l Lista de requisicao.
+*@param ad matriz de adjacentes.
+*@param V numero de vertices.
+*@return Retorna a lista de requisicoe.
+*/
 
+Lord fmax(Lord l,int **ad,int V){
+Graph G;
+Ordem a,aux;
+int f=0,w=1,I,O,h;
+h=0;
+Resp road;
+G=GRAPHinit(V);
+GRAPHinsertArc(G,V,ad);
+for(a=l->ini;a!=NULL;a=a->prox){
+        if(h < a->V){
+                h=a->V;}
+
+        if(a->F==0){
+                while(w==1){
+                        I=a->I;
+                        O=a->O;
+                        road=dijkstra(I,O,G);
+                        if(road->c==1){
+                                exclui_aresta(G,road);
+                                f++;
+                                desalocaResp(road);
+                        }
+                        else{
+                                desalocaResp(road);
+                                w=0;
+                            }
+                }
+                //cout<<"\nF:"<<f;
+                for(aux=a;aux!=NULL;aux=aux->prox){
+                        if(aux->I==I&&aux->O==O){
+                                aux->F=f;
+                }
+          else{
+                break;
+          }
+
+        }
+        if(G!=NULL){
+                desalocaGrafo(G,G->V);
+        }
+        if(w==0){
+                G=GRAPHinit(V);
+                GRAPHinsertArc(G,V,ad);
+        }
+        f=0;
+        w=1;
+
+        }
+
+}
+cout<<"\nAcabei fluxo.";
+H=h;
+return l;
+}
+
+/**
+*@fn Lord ordenaF(Lord l)
+*Funcao para ordenar a lista de requisicao de acordo com o fluxo.
+*@param l Lista de requisicao.
+*@return Retorna a lista de requisicoe.
+*/
+
+Lord ordenaF(Lord l){
+int r,t,y,f,h;
+
+Ordem k,i;
+for(i=l->ini;i!=NULL;i=i->prox){
+        for(Ordem j= i->prox;j!=NULL;j=j->prox){
+                if(i->F < j->F){
+                        r = i->I;
+                        t = i->O;
+                        y = i->V;
+                        f = i->F;
+                        i->I = j->I;
+                        i->O = j->O;
+                        i->V = j->V;
+                        i->F = j->F;
+                        j->I = r;
+                        j->O = t;
+                        j->V = y;
+                        j->F = f;
+
+                }
+                else if(i->F==j->F && i->V<j->V){/*conferindo se o tamanho do caminho minimo da requisiço é menor que o da proxima requisição na lista de requisições*/
+
+                        r = i->I;
+                        t = i->O;
+                        y = i->V;
+                        f = i->F;
+                        i->I = j->I;
+                        i->O = j->O;
+                        i->V = j->V;
+                        i->F = j->F;
+                        j->I = r;
+                        j->O = t;
+                        j->V = y;
+                        j->F = f;
+                        }
+                }
+
+}
+
+
+return l;
+}
 /**
 *@fn desalocaMatriz(int ** r,int v)
 *Funcao para que desaloca uma lista de inteiros.
@@ -901,7 +1020,6 @@ Resp road;
 for(l=k->ini;l!=NULL;l=l->prox){
         i=l->I;
         j=l->O;
-        //Resp road = new struct resp;
         road = NULL;
         aux=A->ini;
         link z;
@@ -916,15 +1034,29 @@ for(l=k->ini;l!=NULL;l=l->prox){
                 /*percorrendo a lista de grafos*/
                 else if(road->V > H && aux->next!=NULL){          /*caso o caminha achado seja maior que H e tenha um proximo grafo*/
                         aux=aux->next;
+                        desalocaResp(road);
                         }
                 /*criação de novos grafos*/
                 else if(road->V > H && aux->next==NULL){   /*caso o caminho achado seja maior que H e nao tenha um proximo grafo*/
-                        A=NEWgnode(A,v,ad);
-                        aux=A->fim;
+                        if(A->q==gu-1){
+                                desalocaResp(road);
+                                desalocaglist(A);
+                                desalocaLreq(rr);
+                                return NULL;
+                                }
+                        else{
+                                desalocaResp(road);
+                                A=NEWgnode(A,v,ad);
+                                aux=A->fim;
+                                }
                         }
 
                 }
 }
+if(A->q<gu){
+gu = A->q;
+}
+
 
 return rr;
 }
@@ -948,22 +1080,18 @@ bins aux;
 int i,j;
 Ordem l;
 int soma=0;
-
+Resp road;
 for(l=k->ini;l!=NULL;l=l->prox){
         i=l->I;
         j=l->O;
-        Resp road = new struct resp;
-        road = NULL;
         aux=C->ini;
         link z;
         while(l->C){
                 road=dijkstra(i,j,aux->g);
-                /*cout<<"\nTamanho: "<<road->V;*/
                 if(road->c==1){
                         exclui_aresta(aux->g, road);
                         l->C=0;
 
-                        //soma=soma+road->V;
                         z= road->next;
                         rr = criareq(rr,l->I,l->O,aux->g->IG,road,z);
                         }
@@ -997,9 +1125,9 @@ float tempo=0;
 glist B;
 Lreq lr;
 time_t  t_ini, t_fim;
-
+int GU=INT_MAX;
 fr=cria();
-
+Rf R= new struct rf;
 t_ini= time(NULL);
 
 while(tempo<300){
@@ -1007,22 +1135,34 @@ while(tempo<300){
         B=NEWgnode(B,v,ad);
 
         lr=criavazia();
+
         lr = kapov(Lordena, B,v,ad,lr);
-        Rf R= new struct rf;
-        R->qg=B->q;
-        R->sc=lr->S;
-        R->mc= (float)R->sc/(float)tamL;
-        R->tr=tamL;
-        R->prox=fr->ini;
-        fr->ini=R;
-        fr->V=v;
-        fr->A=B->ini->g->A;
 
-        Lordena = randomiza(Lordena);
-        Lordena = ordena(Lordena);
+        if(lr==NULL){
 
-        desalocaglist(B);
-        desalocaLreq(lr);
+                Lordena = randomiza(Lordena);
+                //Lordena = ordena(Lordena);
+                Lordena = ordenaF(Lordena);
+        }
+        else{
+                if(B->q<GU){
+                        R->qg=B->q;
+                        R->sc=lr->S;
+                        R->mc= (float)R->sc/(float)tamL;
+                        R->tr=tamL;
+                        R->prox=fr->ini;
+                        fr->ini=R;
+                        R->prox=NULL;
+                        fr->V=v;
+                        fr->A=B->ini->g->A;
+                        }
+                Lordena = randomiza(Lordena);
+                Lordena = ordena(Lordena);
+                //Lordena = ordenaF(Lordena);
+
+                desalocaglist(B);
+                desalocaLreq(lr);
+        }
         t_fim= time(NULL);
         tempo=difftime(t_fim,t_ini);
 }
@@ -1093,41 +1233,18 @@ void criatxtK(Lrf R){
 
 int k,q,w,i;
 float e;
-for(Rf a=R->ini;a!=NULL;a=a->prox){
-        for(Rf b=a->prox;b!=NULL;b=b->prox){
-                if(a->qg > b->qg){
-                k=b->qg;
-                q=b->sc;
-                e=b->mc;
-                w=b->tr;
-                b->qg=a->qg;
-                b->sc=a->sc;
-                b->mc=a->mc;
-                b->tr=a->tr;
-                a->qg=k;
-                a->sc=q;
-                a->mc=e;
-                a->tr=w;
-                }
-                }
 
-}
 Rf a= R->ini;
-std::ofstream file1 ("dadosKbrasil.txt");
+std::ofstream file1 ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Resultados\\dadosgiul.txt");
 file1<<"\nNumero de vertices:"<<R->V;
 file1<<"\nNumero de arestas:"<<R->A;
 file1<<"\n\n";
-for(i=0;i<10;i++){
-        file1<<"\nNumero de grafos:"<<a->qg;
-        file1<<"\nSomatorio dos caminhos:"<<a->sc;
-        file1<<"\nMedia dos caminhos:"<<a->mc;
-        file1<<"\nTotal de requisições:"<<a->tr;
-        file1<<"\n\n";
-        a=a->prox;
-        if(a==NULL){
-        break;
-        }
-}
+file1<<"\nNumero de grafos:"<<a->qg;
+file1<<"\nSomatorio dos caminhos:"<<a->sc;
+file1<<"\nMedia dos caminhos:"<<a->mc;
+file1<<"\nTotal de requisições:"<<a->tr;
+file1<<"\n\n";
+
 
 file1.close();
 }
@@ -1190,13 +1307,13 @@ int main(){
 int v,y,i,j,k,q,w;
 float e;
 link te;
-
+srand(NULL);
 
 
 
 
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file ("brasil.txt");
+std::ifstream file ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\giul.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
@@ -1235,8 +1352,11 @@ srand(time(0));
 
 Lord Lordena= requisicoes(v,r,ad);
 Ordem l;
+Lordena = fmax(Lordena,ad,v);
 Lordena = randomiza(Lordena);
-Lordena = ordena(Lordena);
+//Lordena = ordena(Lordena);
+Lordena = ordenaF(Lordena);
+
 Lrf L;
 
 L=Lkapov(Lordena,v,ad,r);

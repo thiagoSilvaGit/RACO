@@ -1,0 +1,64 @@
+
+Numero de vertices:90
+Numero de arestas:274
+
+
+Numero de grafos:25
+Somatorio dos caminhos:2272
+Media dos caminhos:6.32869
+Total de requisições:359
+
+
+Numero de grafos:25
+Somatorio dos caminhos:2267
+Media dos caminhos:6.31476
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2272
+Media dos caminhos:6.32869
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2264
+Media dos caminhos:6.30641
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2277
+Media dos caminhos:6.34262
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2268
+Media dos caminhos:6.31755
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2278
+Media dos caminhos:6.3454
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2255
+Media dos caminhos:6.28134
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2290
+Media dos caminhos:6.37883
+Total de requisições:359
+
+
+Numero de grafos:26
+Somatorio dos caminhos:2253
+Media dos caminhos:6.27577
+Total de requisições:359
+
