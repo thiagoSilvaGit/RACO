@@ -1,0 +1,121 @@
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10585
+Media dos caminhos:3.62748
+Total de requisições:2918
+Semente:1000
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10518
+Media dos caminhos:3.60452
+Total de requisições:2918
+Semente:1100
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10570
+Media dos caminhos:3.62234
+Total de requisições:2918
+Semente:1200
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10572
+Media dos caminhos:3.62303
+Total de requisições:2918
+Semente:1300
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:115
+Somatorio dos caminhos:10616
+Media dos caminhos:3.63811
+Total de requisições:2918
+Semente:1400
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10575
+Media dos caminhos:3.62406
+Total de requisições:2918
+Semente:1500
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:115
+Somatorio dos caminhos:10587
+Media dos caminhos:3.62817
+Total de requisições:2918
+Semente:1600
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10549
+Media dos caminhos:3.61515
+Total de requisições:2918
+Semente:1700
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:115
+Somatorio dos caminhos:10530
+Media dos caminhos:3.60864
+Total de requisições:2918
+Semente:1800
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:115
+Somatorio dos caminhos:10548
+Media dos caminhos:3.6148
+Total de requisições:2918
+Semente:1900
+
+
+Numero de vertices:71
+Numero de arestas:350
+
+
+Numero de grafos:114
+Somatorio dos caminhos:10538
+Media dos caminhos:3.61138
+Total de requisições:2918
+Semente:2000
+

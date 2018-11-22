@@ -1,0 +1,121 @@
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1086
+Media dos caminhos:2.91153
+Total de requisições:373
+Semente:1000
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1081
+Media dos caminhos:2.89812
+Total de requisições:373
+Semente:1100
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1094
+Media dos caminhos:2.93298
+Total de requisições:373
+Semente:1200
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1091
+Media dos caminhos:2.92493
+Total de requisições:373
+Semente:1300
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1100
+Media dos caminhos:2.94906
+Total de requisições:373
+Semente:1400
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1094
+Media dos caminhos:2.93298
+Total de requisições:373
+Semente:1500
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1085
+Media dos caminhos:2.90885
+Total de requisições:373
+Semente:1600
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1094
+Media dos caminhos:2.93298
+Total de requisições:373
+Semente:1700
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1080
+Media dos caminhos:2.89544
+Total de requisições:373
+Semente:1800
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1073
+Media dos caminhos:2.87668
+Total de requisições:373
+Semente:1900
+
+
+Numero de vertices:20
+Numero de arestas:78
+
+
+Numero de grafos:22
+Somatorio dos caminhos:1086
+Media dos caminhos:2.91153
+Total de requisições:373
+Semente:2000
+

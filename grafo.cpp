@@ -75,7 +75,6 @@ int H=0,tamL=0,gu=INT_MAX;
 
 
 
-
 /**
 *Estrutura dos grafos
 */
@@ -812,9 +811,24 @@ for(i=l->ini;i!=NULL;i=i->prox){
                         j->I = r;
                         j->O = t;
                         j->V = y;
-                        j->F=f;
+                        j->F = f;
                         }
+                else if(i->V == j->V && i->F < j->F){
+                        r = i->I;
+                        t = i->O;
+                        y = i->V;
+                        f = i->F;
+                        i->I = j->I;
+                        i->O = j->O;
+                        i->V = j->V;
+                        i->F = j->F;
+                        j->I = r;
+                        j->O = t;
+                        j->V = y;
+                        j->F = f;
                 }
+
+        }
 
 }
 H=l->ini->V;
@@ -858,7 +872,6 @@ for(a=l->ini;a!=NULL;a=a->prox){
                                 w=0;
                             }
                 }
-                //cout<<"\nF:"<<f;
                 for(aux=a;aux!=NULL;aux=aux->prox){
                         if(aux->I==I&&aux->O==O){
                                 aux->F=f;
@@ -914,8 +927,7 @@ for(i=l->ini;i!=NULL;i=i->prox){
                         j->F = f;
 
                 }
-                else if(i->F==j->F && i->V<j->V){/*conferindo se o tamanho do caminho minimo da requisiço é menor que o da proxima requisição na lista de requisições*/
-
+                /*else if(i->F==j->F && i->V<j->V){/*conferindo se o tamanho do caminho minimo da requisiço é menor que o da proxima requisição na lista de requisições
                         r = i->I;
                         t = i->O;
                         y = i->V;
@@ -928,7 +940,7 @@ for(i=l->ini;i!=NULL;i=i->prox){
                         j->O = t;
                         j->V = y;
                         j->F = f;
-                        }
+                        } */
                 }
 
 }
@@ -1038,17 +1050,17 @@ for(l=k->ini;l!=NULL;l=l->prox){
                         }
                 /*criação de novos grafos*/
                 else if(road->V > H && aux->next==NULL){   /*caso o caminho achado seja maior que H e nao tenha um proximo grafo*/
-                        if(A->q==gu-1){
+                        /*if(A->q==gu-1){
                                 desalocaResp(road);
                                 desalocaglist(A);
                                 desalocaLreq(rr);
                                 return NULL;
                                 }
-                        else{
+                        else{*/
                                 desalocaResp(road);
                                 A=NEWgnode(A,v,ad);
                                 aux=A->fim;
-                                }
+                                //}
                         }
 
                 }
@@ -1061,7 +1073,95 @@ gu = A->q;
 return rr;
 }
 
+/**
+*@fn kapovL(Lord k,glist A,int v,int **ad,Lreq rr)
+*Funcao que executa o metodo desenvolvido por Kapov.
+*@param k Lista de requisicao ordenada.
+*@param A Lista de grafos.
+*@param v Numero de vertices.
+*@param ad Matriz de adjacencia.
+*@param rr Lista de respostas.
+*@return Lista de resposta
+*/
 
+Lreq kapovL(Lord k,glist A,int v,int **ad,Lreq rr){
+        bins aux;
+        int i,j;
+        link te;
+        Ordem l;
+        int soma=0;
+        Resp road;
+        if(gu==INT_MAX){
+
+                rr =kapov( k,A,v,ad,rr);
+        }
+        else{
+                for(i=1;i<gu-1;i++){
+
+                        A=NEWgnode(A,v,ad);
+                }
+                for(l=k->ini;l!=NULL;l=l->prox){
+                        i=l->I;
+                        j=l->O;
+                        road = NULL;
+                        aux=A->ini;
+                        link z;
+                        while(l->C){
+                                road=dijkstra(i,j,aux->g);
+                                if(road->V == l->V){
+                                        exclui_aresta(aux->g, road);
+                                        l->C=0;
+                                        z= road->next;
+                                        rr = criareq(rr,l->I,l->O,aux->g->IG,road,z);
+                                }
+
+                                else if(road->V != l->V && aux->next!=NULL){
+                                        aux=aux->next;
+                                        desalocaResp(road);
+                                }
+
+                                else if(road->V != l->V && aux->next==NULL){
+                                                desalocaResp(road);
+                                                break;
+                                }
+
+                        }
+                        aux=A->ini;
+                        while(l->C){
+                                road=dijkstra(i,j,aux->g);
+                                if(road->V <= H){
+                                        exclui_aresta(aux->g, road);
+                                        l->C=0;
+                                        z= road->next;
+                                        rr = criareq(rr,l->I,l->O,aux->g->IG,road,z);
+                                }
+
+                                else if(road->V > H && aux->next!=NULL){
+                                        aux=aux->next;
+                                        desalocaResp(road);
+                                }
+
+                                else if(road->V >H && aux->next==NULL){
+                                                desalocaResp(road);
+                                                desalocaglist(A);
+                                                desalocaLreq(rr);
+                                                return NULL;
+                                }
+
+                        }
+                }
+
+
+
+
+        }
+
+
+        if(A->q<gu){
+        gu=A->q;
+        }
+        return rr;
+}
 
 
 
@@ -1097,14 +1197,26 @@ for(l=k->ini;l!=NULL;l=l->prox){
                         }
                 else if(road->c==0 && aux->next!=NULL){
                         aux=aux->next;
+                        desalocaResp(road);
                         }
                 else if(road->c==0 && aux->next == NULL){
-                        C=NEWgnode(C,V,ad);
-                        aux=C->fim;
+                        if(C->q==gu-1){
+                                desalocaResp(road);
+                                desalocaglist(C);
+                                desalocaLreq(rr);
+                                return NULL;
+                                }
+                        else{
+                                desalocaResp(road);
+                                C=NEWgnode(C,V,ad);
+                                aux=C->fim;
+                                }
                         }
                 }
 }
-
+if(C->q<gu){
+gu = C->q;
+}
 
 return rr;
 }
@@ -1136,13 +1248,13 @@ while(tempo<300){
 
         lr=criavazia();
 
-        lr = kapov(Lordena, B,v,ad,lr);
-
+        //lr = kapov(Lordena, B,v,ad,lr);
+        lr = kapovL(Lordena,B,v,ad,lr);
         if(lr==NULL){
 
                 Lordena = randomiza(Lordena);
-                //Lordena = ordena(Lordena);
-                Lordena = ordenaF(Lordena);
+                Lordena = ordena(Lordena);
+                //Lordena = ordenaF(Lordena);
         }
         else{
                 if(B->q<GU){
@@ -1166,8 +1278,6 @@ while(tempo<300){
         t_fim= time(NULL);
         tempo=difftime(t_fim,t_ini);
 }
-cout<<"\nTempo:"<<tempo;
-
 
 desalocaLord (Lordena);
 return fr;
@@ -1229,13 +1339,14 @@ return fr;
 *@param R Lista de resposta final.
 
 */
+
 void criatxtK(Lrf R){
 
 int k,q,w,i;
 float e;
 
 Rf a= R->ini;
-std::ofstream file1 ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Resultados\\dadosgiul.txt");
+std::ofstream file1 ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosF\\nsf3\\nsf30.txt");
 file1<<"\nNumero de vertices:"<<R->V;
 file1<<"\nNumero de arestas:"<<R->A;
 file1<<"\n\n";
@@ -1243,6 +1354,7 @@ file1<<"\nNumero de grafos:"<<a->qg;
 file1<<"\nSomatorio dos caminhos:"<<a->sc;
 file1<<"\nMedia dos caminhos:"<<a->mc;
 file1<<"\nTotal de requisições:"<<a->tr;
+//file1<<"\nSemente:"<<semen;
 file1<<"\n\n";
 
 
@@ -1304,16 +1416,21 @@ file1.close();
 
 /**Main*/
 int main(){
-int v,y,i,j,k,q,w;
+int v,y,i,j,k,q,w,art=0;
+int semen=0;
+std::ofstream file1 ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosFKV\\dadossun.txt");
+
+while(art<11){
+semen=1000+100*art;
 float e;
 link te;
-srand(NULL);
+
 
 
 
 
 /*leitura do arquivo com o numero de nos*/
-std::ifstream file ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\giul.txt");
+std::ifstream file ("C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\sun.txt");
 
 if(!file){
         printf("\n Erro de leitura.");
@@ -1347,20 +1464,34 @@ for(i=0;i<v;i++){
 
 file.close();
 
-
-srand(time(0));
+srand(semen);
 
 Lord Lordena= requisicoes(v,r,ad);
 Ordem l;
 Lordena = fmax(Lordena,ad,v);
 Lordena = randomiza(Lordena);
-//Lordena = ordena(Lordena);
-Lordena = ordenaF(Lordena);
+Lordena = ordena(Lordena);
+//Lordena = ordenaF(Lordena);
 
 Lrf L;
-
+L= new struct lrf;
 L=Lkapov(Lordena,v,ad,r);
-criatxtK(L);
+//criatxtK(L);
+Rf teste= L->ini;
+
+
+file1<<"\nNumero de vertices:"<<L->V;
+file1<<"\nNumero de arestas:"<<L->A;
+file1<<"\n\n";
+file1<<"\nNumero de grafos:"<<teste->qg;
+file1<<"\nSomatorio dos caminhos:"<<teste->sc;
+file1<<"\nMedia dos caminhos:"<<teste->mc;
+file1<<"\nTotal de requisições:"<<teste->tr;
+file1<<"\nSemente:"<<semen;
+file1<<"\n\n";
+
+
+
 //L=Lgulosa(Lordena,v,ad);
 //criatxtG(L);
 
@@ -1371,6 +1502,13 @@ criatxtK(L);
 desalocaLrf(L);
 desalocaMatriz(r,v);
 desalocaMatriz(ad,v);
+gu=INT_MAX;
+H=0;
+tamL=0;
+art++;
+}
+file1.close();
+
 cout<<"\nAcabei";
 getch();
 
