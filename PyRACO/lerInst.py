@@ -23,5 +23,4 @@ def lerTXT(arq):
 
         npAdj = np.array(adjMtx)
         grafo = nkx.convert_matrix.from_numpy_matrix(npAdj)
-
         return(nnodes,adjMtx,reqMtx,grafo)
