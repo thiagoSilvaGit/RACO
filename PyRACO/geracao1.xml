@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <Gerador ArqName="CatInst1">
+       <NumNos>10</NumNos>
+       <MaxGrau>3</MaxGrau>
+       <Densidade>0.7</Densidade>
+       <NumReq>200</NumReq>
+       <Maxreq>4</Maxreq>
+    </Gerador>

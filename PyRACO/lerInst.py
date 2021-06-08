@@ -2,6 +2,7 @@
 import networkx as nkx
 import numpy as np
 import struct_graph as strgr
+import xmlschema
 
 def lerTXT(arq):
 
@@ -23,22 +24,17 @@ def lerTXT(arq):
             reqMtx.append(fnum)
 
         #Criação do grafo
-        npAdj = np.array(adjMtx)
-        grafo = nkx.convert_matrix.from_numpy_matrix(npAdj)
-        capacidade = 1
-        nkx.set_edge_attributes(grafo, capacidade, "capacity")
+        #npAdj = np.array(adjMtx)
+        #grafo = nkx.convert_matrix.from_numpy_matrix(npAdj)
+        #capacidade = 1
+        #nkx.set_edge_attributes(grafo, capacidade, "capacity")
 
-        #Criação da lista de requisições
-        listaReq = []
-        reqMtx = np.array(reqMtx)
-        for i in range(nnodes):
-            for j in range(nnodes):
-                if reqMtx[i][j]:
-                    mxf,cmf = nkx.maximum_flow(grafo,i,j)    #Função para encontra o fluxo maximo   
-                    cmin=nkx.shortest_path_length(grafo,i,j) #Funcao para encontrar o valor do caminho minimo
-                    for k in range(reqMtx[i][j]):
-                        listaReq.append(strgr.Requisicao(i,j,mxf,cmin))
-                else:
-                    pass
 
-        return(nnodes,adjMtx,listaReq)
+        return(nnodes,adjMtx,reqMtx)
+
+def LerXMLGen(arq):
+    xs = xmlschema.XMLSchema('gera.xsd')
+#    print(xs.is_valid(arq))
+#    pprint(xs.to_dict(arq))
+    my_dict = xs.to_dict(arq)
+    return my_dict

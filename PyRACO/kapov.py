@@ -5,10 +5,10 @@ import networkx as nkx
 import numpy as np
 import matplotlib.pyplot as plt
 
-def mkapov(Lreq,Glist,Adj,Maxv,melhor):
+def mkapov(Lreq,Glist,I,Maxv,melhor):
 
 	mc = []     #Lista para converter a lista do caminho em lista de arestas encontrado
-	
+
 	
 	for k in range(len(Lreq)-1):
 		ig = 0 #Auxiliar para percorrer a lista de grafo
@@ -41,7 +41,7 @@ def mkapov(Lreq,Glist,Adj,Maxv,melhor):
 					Camin.clear()
 					return melhor
 				else:
-					g = strgr.CriaGrafo(Adj)
+					g = I.CriaGrafo()
 					Glist.append(strgr.Rede(g,len(Glist)+1))
 					Camin.clear()
 					ig = ig + 1

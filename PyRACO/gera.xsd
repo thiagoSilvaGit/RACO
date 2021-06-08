@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <!-- root element -->
+    <xs:element name="Gerador">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="NumNos" type = "xs:integer"/>
+                <xs:element name="MaxGrau" type="xs:integer"/>
+                <xs:element name="Densidade" type="xs:float"/>
+                <xs:element name="NumReq" type="xs:integer"/>
+                <xs:element name="Maxreq" type="xs:integer"/>
+            </xs:sequence>
+            <xs:attribute name="ArqName" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
