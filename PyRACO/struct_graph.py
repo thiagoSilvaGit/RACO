@@ -79,9 +79,4 @@ class Rede:
         self.numg = numg
 
 
-"""
-class Resposta:
-    def __init__(self):
-        self.lgrafos = []
-        self.attReq = []
-"""
+

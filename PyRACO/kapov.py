@@ -12,9 +12,9 @@ def mkapov(Lreq,Glist,I,Maxv,melhor):
 	
 	for k in range(len(Lreq)-1):
 		ig = 0 #Auxiliar para percorrer a lista de grafo
-		caminho = True # Indicador se encontrou o caminho da requisição
+		caminho = False # Indicador se encontrou o caminho da requisição
 
-		while caminho:
+		while not caminho:
 			
 			if(nkx.has_path(Glist[ig].Grafo,Lreq[k].i,Lreq[k].j)):      #Verifica a existencia de caminho entre a origem e destino no grafo atual
 				Camin = nkx.shortest_path(Glist[ig].Grafo,Lreq[k].i,Lreq[k].j)
@@ -30,7 +30,7 @@ def mkapov(Lreq,Glist,I,Maxv,melhor):
 				Glist[ig].Grafo.remove_edges_from(mc)
 				mc.clear()
 				Camin.clear()
-				caminho = False
+				caminho = True
 
 			elif (Glist[ig].numg < len(Glist)):   #Verifica se o grafo atual é o ultimo grafo da lista
 				ig = ig + 1
