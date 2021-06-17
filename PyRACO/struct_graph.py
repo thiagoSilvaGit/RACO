@@ -3,8 +3,20 @@ import networkx as nkx
 import numpy as np
 import networkx as nkx
 import lerInst as li
+import pickle as pk
 
 #Função para criar Grafo
+
+
+def lePickle(file):
+    with open(file, 'rb') as f:
+        Inst = pk.load(f)
+    return Inst
+
+def toPickle(file,Inst):
+    with open(file, 'wb') as f:
+        pk.dump(Inst,f)
+
 
 
 class Instancia:

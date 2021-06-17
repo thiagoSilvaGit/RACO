@@ -11,22 +11,45 @@ import random
 import kapov as kv
 import time 
 import gerador as G
-import os 
+import os
+import pandas as pd
+
+# 1 - Executar os testes do artigo
+# 2 - Criar método par ler / converter  novas instâncias
+# 3 - Salvar todas as instâncias em pickle (pasta separada)
+# 4 - criar uma função para rodar uma única iteração
+# 4.1 - Entrada: método, parâmetros e configuração
+# 4.2 - Entrada: instância
+# 4.3 - Resultado de uma iteração, tempo, parâmetros de entrada e características (indicadores) da instância
+# 4.4 - Retornar os resultados no formato de lista
+# 5 - Criar uma função para retornar características das instâncias
+# 5.1 - Número de Nós
+# 5.2 - Número de Arcos
+# 5.3 - Número de Requisições
+# 5.4 - Média Requisições
+# 5.5 - Máximo de Requisições
+# 5.6 - Mínimo diferente de zero de requisições
+# 5.7 - Desvio padrão de requisições
+# 5.8 - |Arcos|/|Nos|
+# 5.9  - Grau max dos nós
+
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 if __name__ == '__main__':
     
-    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias"
-    caminhos = [os.path.join(pasta, nome) for nome in os.listdir(pasta)]
-    arquivos = [arq for arq in caminhos if os.path.isfile(arq)]    
-    arquivos_txt = [arq for arq in arquivos if arq.lower().endswith(".txt")]
+    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\"
+    nomes = [nome  for nome in os.listdir(pasta)]
+    caminhos = [pasta + nome for nome in nomes]
+    #arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
+    #arquivos_txt = [arq for arq in arquivos if arq.lower().endswith(".txt")]
 
-    pastaR = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosPy"
-    caminhosR = [os.path.join(pastaR, nomeR) for nomeR in os.listdir(pastaR)]
-    arquivosR = [arqRe for arqRe in caminhosR if os.path.isfile(arqRe)]    
-    arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
+    pastaR = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosPy\\"
+    nomesR = [nome[:nome.find('.')] +'_res.txt'  for nome in nomes]
+    caminhosR = [pastaR + nome for nome in nomesR]
+    #arquivosR = [arqRe for arqRe in caminhosR if os.path.isfile(arqRe)]
+    #arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
 
 
     for arq,arqRe in zip(arquivos_txt, arquivosR_txt): 
