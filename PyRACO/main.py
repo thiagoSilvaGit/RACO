@@ -38,21 +38,23 @@ import pandas as pd
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 if __name__ == '__main__':
-    
-    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\"
+
+
+    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
     nomes = [nome  for nome in os.listdir(pasta)]
     caminhos = [pasta + nome for nome in nomes]
     #arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
     #arquivos_txt = [arq for arq in arquivos if arq.lower().endswith(".txt")]
 
+
     pastaR = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosPy\\"
-    nomesR = [nome[:nome.find('.')] +'_res.txt'  for nome in nomes]
+    nomesR = [nome[:nome.find('.txt')] +'_res.txt'  for nome in nomes]
     caminhosR = [pastaR + nome for nome in nomesR]
     #arquivosR = [arqRe for arqRe in caminhosR if os.path.isfile(arqRe)]
     #arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
 
 
-    for arq,arqRe in zip(arquivos_txt, arquivosR_txt): 
+    for arq,arqRe in zip(caminhos, caminhosR): 
         I = strgr.Instancia()
         I.leTXT(arq)
         print(arq)
@@ -67,9 +69,8 @@ if __name__ == '__main__':
             #maxv2 = max([r.cmin for r in Lreq])
             maxv = max(Lreq, key = lambda maxcmin : maxcmin.cmin)
             maxcm = maxv.cmin    #Atribuindo o maior caminho minimo dos dados
-            end_time = time.time() + 60
+            end_time = time.time() + 120
             countTimer = 0
-
             while time.time() < end_time:
                 g = I.CriaGrafo()
                 Glist.append(strgr.Rede(g,len(Glist)+1))
