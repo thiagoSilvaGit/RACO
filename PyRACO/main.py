@@ -13,11 +13,12 @@ import time
 import gerador as G
 import os
 import pandas as pd
+import heuristicas as h
 
-# 1 - Executar os testes do artigo
-# 2 - Criar método par ler / converter  novas instâncias
-# 3 - Salvar todas as instâncias em pickle (pasta separada)
-# 4 - criar uma função para rodar uma única iteração
+# 1 - Executar os testes do artigo - ok
+# 2 - Criar método par ler / converter  novas instâncias - ok
+# 3 - Salvar todas as instâncias em pickle (pasta separada) - ok
+# 4 - criar uma função para rodar uma única iteração - ok
 # 4.1 - Entrada: método, parâmetros e configuração
 # 4.2 - Entrada: instância
 # 4.3 - Resultado de uma iteração, tempo, parâmetros de entrada e características (indicadores) da instância
@@ -38,8 +39,20 @@ import pandas as pd
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 if __name__ == '__main__':
+    teste = '../Instâncias/pickle/eon.pickle'
+    Inst = strgr.lePickle(teste)
+
+    kpov = h.Hsolver(niter=100)
+    kpov.setseed(10)
+
+    [obj,Glist,tempo] = kpov.solve(Inst)
+    print(f'Objetivo:{obj} \t Tempo:{tempo}')
+
+    [obj,Glist,tempo] = kpov.solve1it(Inst)
+    print(f'Objetivo:{obj} \t Tempo:{tempo}')
 
 
+'''
     pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
     nomes = [nome  for nome in os.listdir(pasta)]
     caminhos = [pasta + nome for nome in nomes]
@@ -101,7 +114,7 @@ if __name__ == '__main__':
         I.Ladj.clear()
 
     print(Fo)
-
+'''
 """
     #print(g.edges(data=True)) 
     #nkx.draw(g,with_labels=True)
