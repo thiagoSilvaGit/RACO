@@ -1,15 +1,14 @@
 # This is a sample Python script.
 import networkx as nx
-
 import lerInst as li
 import numpy as np
 import struct_graph as strgr
 import linkedlist as ll
 import networkx as nkx
 import matplotlib.pyplot as plt
-import random 
+import random
 import kapov as kv
-import time 
+import time
 import gerador as G
 import os
 import pandas as pd
@@ -39,16 +38,33 @@ import heuristicas as h
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 if __name__ == '__main__':
-    teste = '../Instâncias/pickle/eon.pickle'
+
+    #teste = '../Instâncias/pickle/eon.pickle'
+    teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
     Inst = strgr.lePickle(teste)
 
-    kpov = h.Hsolver(niter=100)
-    kpov.setseed(10)
+    niter = int(input('Digite o numero interções: '))
+    metodo = input('Digite o nome do metodo: ')
+    morde = input('Digite o nome do metodo de ordenação: ')
+    #niter = 2
+    #metodo = 'kapov_bfd'
+    #morde = 'cm'
+    if niter == 1:
+        kpov = h.Hsolver(metodo, niter, morde)
+        kpov.setseed(10)
+        [obj, Glist, Resp, tempo] = kpov.solve1it(Inst)
+    else:
+        kpov = h.Hsolver(metodo, niter, morde)
+        kpov.setseed(10)
+        [obj, Glist, Resp, tempo] = kpov.solve(Inst)
+#    for i in range(len(Resp)-1):
+ #       for j in range(i+1, len(Resp)-1):
+  #          for l in range(0,len(Resp[i].Cam)-1): #Transformar a lista de caminho encontrado em lista de arestas
+   #             for k in range(0,len(Resp[j].Cam)-1):
+    #                if Resp[i].Cam[l] == Resp[j].Cam[k] and Resp[i].Cam[l+1] == Resp[j].Cam[k+1]  and Resp[i].ig == Resp[j].ig:
+     #                   print(f'Lista:{Resp[i].Cam} \t Grafo:{Resp[i].ig}')
+      #                  print(f'Lista:{Resp[j].Cam} \t Grafo:{Resp[j].ig}')
 
-    [obj,Glist,tempo] = kpov.solve(Inst)
-    print(f'Objetivo:{obj} \t Tempo:{tempo}')
-
-    [obj,Glist,tempo] = kpov.solve1it(Inst)
     print(f'Objetivo:{obj} \t Tempo:{tempo}')
 
 

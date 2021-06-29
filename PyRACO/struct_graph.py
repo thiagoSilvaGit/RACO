@@ -90,5 +90,10 @@ class Rede:
         self.Grafo = g
         self.numg = numg
 
+class Resp:
+    def __init__(self,resp,indg):
+        self.Cam = resp
+        self.ig = indg 
+
 
 

@@ -5,7 +5,7 @@ import networkx as nkx
 import numpy as np
 import matplotlib.pyplot as plt
 
-class kapovBFD:
+class criaslBFD:
 
 	def solve(self,Lreq,Glist,I,LR,Maxv,melhor):
 
@@ -68,19 +68,15 @@ class kapovBFD:
 					Camin.clear()
 
 				elif (Glist[ig].numg == len(Glist)):  #Verifica se o grafo atual é o ultimo grafo da lista
-					if len(Glist) == melhor-1:        #Verifica se o numero de grafos ja criado é igual a melhor solução atual
-						Camin.clear()
-						return melhor
-					else:
-						g = I.CriaGrafo()
-						Glist.append(strgr.Rede(g,len(Glist)+1))
-						Camin.clear()
-						ig = ig + 1
+					g = I.CriaGrafo()
+					Glist.append(strgr.Rede(g,len(Glist)+1))
+					Camin.clear()
+					ig = ig + 1
 
 		
 		return len(Glist)
 
-class kapovFFD:
+class criaslFFD:
 	
 	def solve(self,Lreq,Glist,I,LR,Maxv,melhor):
 		mc = []     #Lista para converter a lista do caminho em lista de arestas encontrado
@@ -111,14 +107,9 @@ class kapovFFD:
 					Camin.clear()
 
 				elif (Glist[ig].numg == len(Glist)):  #Verifica se o grafo atual é o ultimo grafo da lista    
-					if len(Glist) == melhor-1:        #Verifica se o numero de grafos ja criado é igual a melhor solução atual
-						Camin.clear()
-						return melhor
-					else:
-						g = I.CriaGrafo()
-						Glist.append(strgr.Rede(g,len(Glist)+1))
-						Camin.clear()
-						ig = ig + 1
+					g = I.CriaGrafo()
+					Glist.append(strgr.Rede(g,len(Glist)+1))
+					Camin.clear()
+					ig = ig + 1
 
 		return len(Glist)   
-
