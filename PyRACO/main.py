@@ -25,13 +25,16 @@ import heuristicas as h
 # 5 - Criar uma função para retornar características das instâncias
 # 5.1 - Número de Nós
 # 5.2 - Número de Arcos
+# 5.8 - |Arcos|/|Nos|
+# 5.9 - Grau max dos nós
+# 5.10 - Fluxo Máximo
+# 5.11 - Maior caminho mínimo
 # 5.3 - Número de Requisições
 # 5.4 - Média Requisições
 # 5.5 - Máximo de Requisições
 # 5.6 - Mínimo diferente de zero de requisições
 # 5.7 - Desvio padrão de requisições
-# 5.8 - |Arcos|/|Nos|
-# 5.9  - Grau max dos nós
+
 
 
 # Press Shift+F10 to execute it or replace it with your code.

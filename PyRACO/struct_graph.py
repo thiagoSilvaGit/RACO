@@ -76,6 +76,7 @@ class Instancia:
 
 
 
+
 class Requisicao:
     def __init__(self, org,dest,mxf,cmin):
         self.i = org
