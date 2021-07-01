@@ -1,0 +1,3 @@
+,nome,nos,arcos,a/g,gmax,gmin,max_fm,max_cmin,nreq,mreq,max_reqs,max_reqc,std_reqs,std_reqc,obj,metodo,tempo
+0,eon,20,78,3.9,14,4,7,5,373,18.65,27,26,4.145701642094274,4.738143096192854,22,kapov_bfd cm,0.2269601821899414
+1,eon,20,78,3.9,14,4,7,5,373,18.65,27,26,4.145701642094274,4.738143096192854,22,kapov_bfd cm,0.18464994430541992

@@ -33,18 +33,24 @@ import learning as lear
 # 5.8 - |Arcos|/|Nos|
 # 5.9  - Grau max dos nós
 
+# Criar método para rodar heurística com tempo
+# rodar para lista de instâncias com todas as combinações de método  e 10 segundos
+# Adaptar as sementes e alterar o criaDFlearning para rodar com mais de uma semente por instância
+
+# Desenvolver modelos de classificação
+
 
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 if __name__ == '__main__':
 
-    #teste = '../Instâncias/pickle/eon.pickle'
-    teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
+    teste = '../Instâncias/pickle/eon.pickle'
+    #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
     Inst = strgr.lePickle(teste)
     TesteD = lear.classificaInst(Inst)
     print(TesteD)
-    #niter = int(input('Digite o numero interções: '))
+    #niter = int(inp1ut('Digite o numero interções: '))
     #metodo = input('Digite o nome do metodo: ')
     #morde = input('Digite o nome do metodo de ordenação: ')
     niter = 1
@@ -61,7 +67,16 @@ if __name__ == '__main__':
 
     print(f'Objetivo:{obj} \t Tempo:{tempo}')
 
+    obv = lear.criaData(['kapov_bfd','kapov_ffd'], ['cm','fm'], 10, Inst,'eon')
 
+
+    print(obv)
+
+    dfobv = lear.criaDFLearning([Inst,Inst],['eon','eon'],['kapov_bfd','kapov_ffd'], ['cm','fm'], 10)
+
+    print(dfobv)
+
+    dfobv.to_csv('saida.csv')
 '''
     pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
     nomes = [nome  for nome in os.listdir(pasta)]

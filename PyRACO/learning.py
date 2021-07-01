@@ -19,7 +19,7 @@ def classificaInst(I):
 def classificaReq(R, n):
 
     sai = [sum(r) for r in R]
-    entra = [sum([linha[n-1] for linha in R]) for j in range(len(R))]
+    entra = [sum([linha[j] for linha in R]) for j in range(len(R))]
     # 5.3 - Número de Requisições
     nr = sum(sai)
     # 5.4 - Média Requisições
@@ -33,7 +33,7 @@ def classificaReq(R, n):
     stdrc = st.stdev(entra)
 
     return [nr, mrs, maxrs, maxrc, stdrs, stdrc]
-    # return [nr, mrs, maxrs, stdrs]
+
 
     return 0
 
@@ -46,8 +46,11 @@ def classificaGrafo(g):
     # 5.8 - |Arcos|/|Nos|
     r = a/n
     # 5.9 - Grau max dos nós
-    gdmax = max(g.degree)
-    gdmin = min(g.degree)
+
+    ld_aux = g.degree
+    ldegree =[i[1] for i in ld_aux]
+    gdmax = max(ldegree)
+    gdmin = min(ldegree)
     # 5.10 - Fluxo Máximo
     # 5.11 - Maior caminho mínimo
 
@@ -68,22 +71,34 @@ def classificaGrafo(g):
     return ind
 
 
-def criaDFLearning(Data):
+def criaDFLearning(linst,linst_n,listaAlg, listOrd, nrep, seed=10):
+    lobv =[]
+    for i in range(len(linst)):
+        obv = criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed)
+        lobv.append(obv)
 
-    return 0
+    col = ['nome','nos','arcos','a/g', 'gmax', 'gmin', 'max_fm', 'max_cmin', 'nreq', 'mreq', 'max_reqs', 'max_reqc','std_reqs','std_reqc','obj','metodo','tempo']
+    dfObv = pd.DataFrame(lobv, columns=col)
+
+    return dfObv
 
 
-def criaData(listaAlg, listOrd, nrep, Inst, seed=10):
+def criaData(listaAlg, listOrd, nrep, Inst, inome, seed=10):
     # executar todos os algoritmos, número de vezes específica e coletar o resultado
 
     indicadores = classificaInst(Inst)
 
-    observ = []
+    best = np.infty
+    best_mtd = ''
+    tempo_best = 0.0
     for (A, O) in it.product(listaAlg, listOrd):
-        for i in range(nrep):
-            metodo = h.Hsolver(A, 1, O)
-            metodo.setseed(seed)
-            res = metodo.solve1it(Inst)
-            observ.append(indicadores + res)
+        metodo = h.Hsolver(A, nrep, O)
+        metodo.setseed(seed)
+        [obj, _, _, tempo] = metodo.solve1it(Inst)
+        if obj < best:
+            best = obj
+            best_mtd = A +' '+ O
+            tempo_best = tempo
 
+    observ = [inome] + indicadores + [best,best_mtd,tempo_best]
     return observ
