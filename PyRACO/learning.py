@@ -8,18 +8,18 @@ import itertools as it
 import heuristicas as h
 
 
-
 def classificaInst(I):
     grafo = I.CriaGrafo()
     indGrafo = classificaGrafo(grafo)
-    indReq = classificaReq(I.Lreq,I.nf)
+    indReq = classificaReq(I.Lreq, I.n)
     listaInd = indGrafo + indReq
     return listaInd
 
-def classificaReq(R,n):
+
+def classificaReq(R, n):
 
     sai = [sum(r) for r in R]
-    entra = [sum([linha[n] for linha in R]) for j in range(len(R))]
+    entra = [sum([linha[n-1] for linha in R]) for j in range(len(R))]
     # 5.3 - Número de Requisições
     nr = sum(sai)
     # 5.4 - Média Requisições
@@ -33,9 +33,10 @@ def classificaReq(R,n):
     stdrc = st.stdev(entra)
 
     return [nr, mrs, maxrs, maxrc, stdrs, stdrc]
-
+    # return [nr, mrs, maxrs, stdrs]
 
     return 0
+
 
 def classificaGrafo(g):
     # 5.1 - Número de Nós
@@ -45,8 +46,8 @@ def classificaGrafo(g):
     # 5.8 - |Arcos|/|Nos|
     r = a/n
     # 5.9 - Grau max dos nós
-    gdmax = max(g.Degree)
-    gdmin = min(g.Degree)
+    gdmax = max(g.degree)
+    gdmin = min(g.degree)
     # 5.10 - Fluxo Máximo
     # 5.11 - Maior caminho mínimo
 
@@ -54,29 +55,31 @@ def classificaGrafo(g):
     maxcmin = 0
     for i in range(n):
         for j in range(n):
-            mxf, _ = nkx.maximum_flow(g, i, j)
-            cmin = nkx.shortest_path_length(g, i, j)
-            if mxf > maxmf:
-                maxmf = mxf
-            if cmin > maxcmin
-                maxcmin = cmin
+            if i != j:
+                mxf, dfm = nkx.maximum_flow(g, i, j)
+                cmin = nkx.shortest_path_length(g, i, j)
+                if mxf > maxmf:
+                    maxmf = mxf
+                if cmin > maxcmin:
+                    maxcmin = cmin
 
-    ind = [n, a, r, gdmax, gdmin, maxmf,maxcmin]
+    ind = [n, a, r, gdmax, gdmin, maxmf, maxcmin]
 
     return ind
 
 
-def criaDFLearning(Data)
+def criaDFLearning(Data):
 
     return 0
 
-def criaData(listaAlg,listOrd,nrep, Inst, seed = 10):
+
+def criaData(listaAlg, listOrd, nrep, Inst, seed=10):
     # executar todos os algoritmos, número de vezes específica e coletar o resultado
 
     indicadores = classificaInst(Inst)
 
     observ = []
-    for (A,O) in it.product(listaAlg,listOrd):
+    for (A, O) in it.product(listaAlg, listOrd):
         for i in range(nrep):
             metodo = h.Hsolver(A, 1, O)
             metodo.setseed(seed)

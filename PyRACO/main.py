@@ -4,7 +4,6 @@ import lerInst as li
 import numpy as np
 import struct_graph as strgr
 import linkedlist as ll
-import networkx as nkx
 import matplotlib.pyplot as plt
 import random
 import kapov as kv
@@ -13,6 +12,7 @@ import gerador as G
 import os
 import pandas as pd
 import heuristicas as h
+import learning as lear
 
 # 1 - Executar os testes do artigo - ok
 # 2 - Criar método par ler / converter  novas instâncias - ok
@@ -25,16 +25,13 @@ import heuristicas as h
 # 5 - Criar uma função para retornar características das instâncias
 # 5.1 - Número de Nós
 # 5.2 - Número de Arcos
-# 5.8 - |Arcos|/|Nos|
-# 5.9 - Grau max dos nós
-# 5.10 - Fluxo Máximo
-# 5.11 - Maior caminho mínimo
 # 5.3 - Número de Requisições
 # 5.4 - Média Requisições
 # 5.5 - Máximo de Requisições
 # 5.6 - Mínimo diferente de zero de requisições
 # 5.7 - Desvio padrão de requisições
-
+# 5.8 - |Arcos|/|Nos|
+# 5.9  - Grau max dos nós
 
 
 # Press Shift+F10 to execute it or replace it with your code.
@@ -45,13 +42,14 @@ if __name__ == '__main__':
     #teste = '../Instâncias/pickle/eon.pickle'
     teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
     Inst = strgr.lePickle(teste)
-
-    niter = int(input('Digite o numero interções: '))
-    metodo = input('Digite o nome do metodo: ')
-    morde = input('Digite o nome do metodo de ordenação: ')
-    #niter = 2
-    #metodo = 'kapov_bfd'
-    #morde = 'cm'
+    TesteD = lear.classificaInst(Inst)
+    print(TesteD)
+    #niter = int(input('Digite o numero interções: '))
+    #metodo = input('Digite o nome do metodo: ')
+    #morde = input('Digite o nome do metodo de ordenação: ')
+    niter = 1
+    metodo = 'kapov_bfd'
+    morde = 'fm_cm'
     if niter == 1:
         kpov = h.Hsolver(metodo, niter, morde)
         kpov.setseed(10)
@@ -60,13 +58,6 @@ if __name__ == '__main__':
         kpov = h.Hsolver(metodo, niter, morde)
         kpov.setseed(10)
         [obj, Glist, Resp, tempo] = kpov.solve(Inst)
-#    for i in range(len(Resp)-1):
- #       for j in range(i+1, len(Resp)-1):
-  #          for l in range(0,len(Resp[i].Cam)-1): #Transformar a lista de caminho encontrado em lista de arestas
-   #             for k in range(0,len(Resp[j].Cam)-1):
-    #                if Resp[i].Cam[l] == Resp[j].Cam[k] and Resp[i].Cam[l+1] == Resp[j].Cam[k+1]  and Resp[i].ig == Resp[j].ig:
-     #                   print(f'Lista:{Resp[i].Cam} \t Grafo:{Resp[i].ig}')
-      #                  print(f'Lista:{Resp[j].Cam} \t Grafo:{Resp[j].ig}')
 
     print(f'Objetivo:{obj} \t Tempo:{tempo}')
 
@@ -86,7 +77,7 @@ if __name__ == '__main__':
     #arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
 
 
-    for arq,arqRe in zip(caminhos, caminhosR): 
+    for arq,arqRe in zip(caminhos, caminhosR) : 
         I = strgr.Instancia()
         I.leTXT(arq)
         print(arq)
@@ -110,7 +101,7 @@ if __name__ == '__main__':
                     with open(arqRe, 'w') as arqR:
                         arqR.write('Numero de arestas:' + str(g.number_of_edges()) + '\n')
                         arqR.write('Numero de nos:' + str(g.number_of_nodes()) + '\n\n')
-        
+    
                 random.shuffle(Lreq)       #Randomizando a Lista de requisição
                 Lreq.sort(key=lambda cammin: cammin.cmin,reverse=True)      #Ordenando a Lista de requisiçao em ordem decrescente em relação o Cammin
                 #Lreq.sort(key=lambda cammin: (cammin.cmin,cammin.mxf),reverse=True)
@@ -135,7 +126,7 @@ if __name__ == '__main__':
     print(Fo)
 '''
 """
-    #print(g.edges(data=True)) 
+    #print(g.edges(data=True) ) 
     #nkx.draw(g,with_labels=True)
     #plt.show()
     #print(g.number_of_nodes())

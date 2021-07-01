@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import networkx as nkx
 import numpy as np
-import networkx as nkx
 import lerInst as li
 import pickle as pk
 
-#Função para criar Grafo
+# Função para criar Grafo
 
 
 def lePickle(file):
@@ -13,10 +12,10 @@ def lePickle(file):
         Inst = pk.load(f)
     return Inst
 
-def toPickle(file,Inst):
-    with open(file, 'wb') as f:
-        pk.dump(Inst,f)
 
+def toPickle(file, Inst):
+    with open(file, 'wb') as f:
+        pk.dump(Inst, f)
 
 
 class Instancia:
@@ -30,7 +29,6 @@ class Instancia:
         self.n = nf
         self.Ladj = adjf
         self.Lreq = Lreqf
-
 
     def imprimirTXT(self, pfile):
         with open(pfile, 'w') as pf:
@@ -61,29 +59,29 @@ class Instancia:
         for i in range(self.n):
             for j in range(self.n):
                 if reqMtx[i][j]:
-                    mxf, cmf = nkx.maximum_flow(grafo, i, j)  # Função para encontra o fluxo maximo
-                    cmin = nkx.shortest_path_length(grafo, i, j)  # Funcao para encontrar o valor do caminho minimo
+                    # Função para encontra o fluxo maximo
+                    mxf, cmf = nkx.maximum_flow(grafo, i, j)
+                    # Funcao para encontrar o valor do caminho minimo
+                    cmin = nkx.shortest_path_length(grafo, i, j)
                     for k in range(reqMtx[i][j]):
                         listaReq.append(Requisicao(i, j, mxf, cmin))
         return listaReq
 
     def CriaGrafo(self):
         npAdj = np.array(self.Ladj)
-        grafo = nkx.convert_matrix.from_numpy_matrix(npAdj,create_using=nkx.DiGraph)
+        grafo = nkx.convert_matrix.from_numpy_matrix(
+            npAdj, create_using=nkx.DiGraph)
         capacidade = 1
         nkx.set_edge_attributes(grafo, capacidade, "capacity")
         return (grafo)
 
 
-
-
 class Requisicao:
-    def __init__(self, org,dest,mxf,cmin):
+    def __init__(self, org, dest, mxf, cmin):
         self.i = org
         self.j = dest
         self.mxf = mxf
         self.cmin = cmin
-
 
 
 class Rede:
@@ -91,10 +89,8 @@ class Rede:
         self.Grafo = g
         self.numg = numg
 
+
 class Resp:
-    def __init__(self,resp,indg):
+    def __init__(self, resp, indg):
         self.Cam = resp
-        self.ig = indg 
-
-
-
+        self.ig = indg
