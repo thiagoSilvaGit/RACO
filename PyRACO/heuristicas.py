@@ -56,12 +56,10 @@ class Hsolver():
             elif self.ord == 'fm':
                 Lreq.sort(key=lambda cammin: cammin.mxf)
             elif self.ord == 'cm_fm':
-                Lreq.sort(key=lambda cammin: (
-                    cammin.cmin, (cammin.mxf * -1)), reverse=True)
+                Lreq.sort(key=lambda cammin: (cammin.cmin, (cammin.mxf * -1)), reverse=True)
 
             elif self.ord == 'fm_cm':
-                Lreq.sort(key=lambda cammin: (
-                    (cammin.mxf*-1), cammin.cmin), reverse=True)
+                Lreq.sort(key=lambda cammin: ((cammin.mxf * -1), cammin.cmin), reverse=True)
 
             result = self.solver.solve(
                 Lreq, Glist, I, Lresp, maxcm, Fo)  # Metodo Kapov
@@ -89,13 +87,46 @@ class Hsolver():
         elif self.ord == 'fm':
             Lreq.sort(key=lambda cammin: cammin.mxf)
         elif self.ord == 'cm_fm':
-            Lreq.sort(key=lambda cammin: (
-                cammin.cmin, (cammin.mxf*-1)), reverse=True)
+            Lreq.sort(key=lambda cammin: (cammin.cmin, (cammin.mxf * -1)), reverse=True)
         elif self.ord == 'fm_cm':
-            Lreq.sort(key=lambda cammin: (
-                (cammin.mxf*-1), cammin.cmin), reverse=True)
-        result = self.solver.solve(
-            Lreq, Glist, I, Lresp, maxcm, np.inf)  # Metodo Kapov
+            Lreq.sort(key=lambda cammin: ((cammin.mxf * -1), cammin.cmin), reverse=True)
+        result = self.solver.solve(Lreq, Glist, I, Lresp, maxcm, np.inf)  # Metodo Kapov
         tfim = time.time() - self.tinit
 
         return [result, Glist, Lresp, tfim]
+
+    def solvetemp(self, I):
+        self.tinit = time.time()
+        bGl = []
+        bLr = []
+        random.seed(self.semente)
+        Lreq = I.splitReq()
+        Fo = np.inf  # Inicializando a Função objetivo com infinito
+        maxv = max(Lreq, key=lambda maxcmin: maxcmin.cmin)
+        maxcm = maxv.cmin  # Atribuindo o maior caminho minimo dos dados
+        end_time = time.time() + self.niter
+        while time.time() < end_time:
+            Glist = []  # Lista de grafos
+            Lresp = []  # Lista com os caminhos e os indices dos grafos da requisições
+            g = I.CriaGrafo()
+            Glist.append(strgr.Rede(g, len(Glist) + 1))
+            random.shuffle(Lreq)  # Randomizando a Lista de requisição
+            if self.ord == 'cm':
+                # Ordenando a Lista de requisiçao em ordem decrescente em relação o Cammin
+                Lreq.sort(key=lambda cammin: cammin.cmin, reverse=True)
+            elif self.ord == 'fm':
+                Lreq.sort(key=lambda cammin: cammin.mxf)
+            elif self.ord == 'cm_fm':
+                Lreq.sort(key=lambda cammin: (cammin.cmin, (cammin.mxf * -1)), reverse=True)
+
+            elif self.ord == 'fm_cm':
+                Lreq.sort(key=lambda cammin: ((cammin.mxf * -1), cammin.cmin), reverse=True)
+
+            result = self.solver.solve(Lreq, Glist, I, Lresp, maxcm, Fo)  # Metodo Kapov
+            if result < Fo:
+                Fo = result
+                bGl = Glist
+                bLr = Lresp
+
+        tfim = time.time() - self.tinit
+        return [Fo, bGl, bLr, tfim]

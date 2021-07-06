@@ -45,38 +45,27 @@ import learning as lear
 
 if __name__ == '__main__':
 
-    teste = '../Instâncias/pickle/eon.pickle'
-    #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
+    #teste = '../Instâncias/pickle/att.pickle'
+    teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\att.pickle'
     Inst = strgr.lePickle(teste)
-    TesteD = lear.classificaInst(Inst)
-    print(TesteD)
-    #niter = int(inp1ut('Digite o numero interções: '))
-    #metodo = input('Digite o nome do metodo: ')
-    #morde = input('Digite o nome do metodo de ordenação: ')
-    niter = 1
-    metodo = 'kapov_bfd'
-    morde = 'fm_cm'
-    if niter == 1:
-        kpov = h.Hsolver(metodo, niter, morde)
-        kpov.setseed(10)
-        [obj, Glist, Resp, tempo] = kpov.solve1it(Inst)
-    else:
-        kpov = h.Hsolver(metodo, niter, morde)
-        kpov.setseed(10)
-        [obj, Glist, Resp, tempo] = kpov.solve(Inst)
 
-    print(f'Objetivo:{obj} \t Tempo:{tempo}')
+    #Linst = []
+    #pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
+    #nomes = [nome  for nome in os.listdir(pasta)]
+    #caminhos = [pasta + nome for nome in nomes]
+    #nomesI = [nome[:nome.find('.pickle')]  for nome in nomes]
 
-    obv = lear.criaData(['kapov_bfd','kapov_ffd'], ['cm','fm'], 10, Inst,'eon')
+    #for arq in caminhos:
+    #    Linst.append(strgr.lePickle(arq))
 
+    #Lmet = ['kapov_bfd', 'kapov_ffd','criaantes_bfd','criaantes_ffd','criasemlim_bfd','criasemlim_ffd']
+    #Lord = ['cm','fm','cm_fm','fm_cm']
 
-    print(obv)
-
-    dfobv = lear.criaDFLearning([Inst,Inst],['eon','eon'],['kapov_bfd','kapov_ffd'], ['cm','fm'], 10)
+    #dfobv = lear.criaDFLearning(Inst, nomesI, Lmet, Lord, 10,100)
+    dfobv = lear.criaDFLearning([Inst, Inst], ['att', 'att'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
     print(dfobv)
-
-    dfobv.to_csv('saida.csv')
+    dfobv.to_csv('saidait.csv')
 '''
     pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
     nomes = [nome  for nome in os.listdir(pasta)]
@@ -92,7 +81,7 @@ if __name__ == '__main__':
     #arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
 
 
-    for arq,arqRe in zip(caminhos, caminhosR) : 
+    for arq,arqRe in zip(caminhos, caminhosR):
         I = strgr.Instancia()
         I.leTXT(arq)
         print(arq)
@@ -116,7 +105,7 @@ if __name__ == '__main__':
                     with open(arqRe, 'w') as arqR:
                         arqR.write('Numero de arestas:' + str(g.number_of_edges()) + '\n')
                         arqR.write('Numero de nos:' + str(g.number_of_nodes()) + '\n\n')
-    
+
                 random.shuffle(Lreq)       #Randomizando a Lista de requisição
                 Lreq.sort(key=lambda cammin: cammin.cmin,reverse=True)      #Ordenando a Lista de requisiçao em ordem decrescente em relação o Cammin
                 #Lreq.sort(key=lambda cammin: (cammin.cmin,cammin.mxf),reverse=True)
@@ -141,7 +130,7 @@ if __name__ == '__main__':
     print(Fo)
 '''
 """
-    #print(g.edges(data=True) ) 
+    #print(g.edges(data=True))
     #nkx.draw(g,with_labels=True)
     #plt.show()
     #print(g.number_of_nodes())

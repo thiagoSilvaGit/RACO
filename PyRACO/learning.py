@@ -6,6 +6,7 @@ import statistics as st
 import networkx as nkx
 import itertools as it
 import heuristicas as h
+import time
 
 
 def classificaInst(I):
@@ -17,13 +18,12 @@ def classificaInst(I):
 
 
 def classificaReq(R, n):
-
     sai = [sum(r) for r in R]
     entra = [sum([linha[j] for linha in R]) for j in range(len(R))]
     # 5.3 - Número de Requisições
     nr = sum(sai)
     # 5.4 - Média Requisições
-    mrs = nr/n
+    mrs = nr / n
     # 5.5 - Máximo de Requisições que saem
     maxrs = max(sai)
     # 5.5 - Máximo de Requisições que chegam
@@ -35,20 +35,17 @@ def classificaReq(R, n):
     return [nr, mrs, maxrs, maxrc, stdrs, stdrc]
 
 
-    return 0
-
-
 def classificaGrafo(g):
     # 5.1 - Número de Nós
     n = g.number_of_nodes()
     # 5.2 - Número de Arcos
     a = g.number_of_edges()
     # 5.8 - |Arcos|/|Nos|
-    r = a/n
+    r = a / n
     # 5.9 - Grau max dos nós
 
     ld_aux = g.degree
-    ldegree =[i[1] for i in ld_aux]
+    ldegree = [i[1] for i in ld_aux]
     gdmax = max(ldegree)
     gdmin = min(ldegree)
     # 5.10 - Fluxo Máximo
@@ -59,7 +56,7 @@ def classificaGrafo(g):
     for i in range(n):
         for j in range(n):
             if i != j:
-                mxf, dfm = nkx.maximum_flow(g, i, j)
+                mxf, _ = nkx.maximum_flow(g, i, j)
                 cmin = nkx.shortest_path_length(g, i, j)
                 if mxf > maxmf:
                     maxmf = mxf
@@ -71,19 +68,21 @@ def classificaGrafo(g):
     return ind
 
 
-def criaDFLearning(linst,linst_n,listaAlg, listOrd, nrep, seed=10):
-    lobv =[]
+def criaDFLearning(linst, linst_n, listaAlg, listOrd, nrep, seed):
+    lobv = []
+
     for i in range(len(linst)):
+        print(i)
         obv = criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed)
         lobv.append(obv)
 
-    col = ['nome','nos','arcos','a/g', 'gmax', 'gmin', 'max_fm', 'max_cmin', 'nreq', 'mreq', 'max_reqs', 'max_reqc','std_reqs','std_reqc','obj','metodo','tempo']
+    col = ['nome', 'nos', 'arcos', 'a/g', 'gmax', 'gmin', 'max_fm', 'max_cmin', 'nreq', 'mreq', 'max_reqs', 'max_reqc', 'std_reqs', 'std_reqc', 'obj', 'metodo', 'tempo', 'semente']
     dfObv = pd.DataFrame(lobv, columns=col)
 
     return dfObv
 
 
-def criaData(listaAlg, listOrd, nrep, Inst, inome, seed=10):
+def criaData(listaAlg, listOrd, nrep, Inst, inome, seed):
     # executar todos os algoritmos, número de vezes específica e coletar o resultado
 
     indicadores = classificaInst(Inst)
@@ -91,14 +90,17 @@ def criaData(listaAlg, listOrd, nrep, Inst, inome, seed=10):
     best = np.infty
     best_mtd = ''
     tempo_best = 0.0
+    best_seed = 0
     for (A, O) in it.product(listaAlg, listOrd):
         metodo = h.Hsolver(A, nrep, O)
-        metodo.setseed(seed)
-        [obj, _, _, tempo] = metodo.solve1it(Inst)
-        if obj < best:
-            best = obj
-            best_mtd = A +' '+ O
-            tempo_best = tempo
+        for i in range(seed):
+            metodo.setseed((i * 100 + 1000))
+            [obj, _, _, tempo] = metodo.solve1it(Inst)
+            if obj < best:
+                best = obj
+                best_mtd = A + ' ' + O
+                tempo_best = tempo
+                best_seed = (i * 100 + 1000)
 
-    observ = [inome] + indicadores + [best,best_mtd,tempo_best]
+    observ = [inome] + indicadores + [best, best_mtd, tempo_best, best_seed]
     return observ
