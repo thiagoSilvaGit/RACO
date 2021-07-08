@@ -70,11 +70,10 @@ def classificaGrafo(g):
 
 def criaDFLearning(linst, linst_n, listaAlg, listOrd, nrep, seed):
     lobv = []
-
     for i in range(len(linst)):
         print(i)
-        obv = criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed)
-        lobv.append(obv)
+        criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed, lobv)
+        #lobv.append(obv)
 
     col = ['nome', 'nos', 'arcos', 'a/g', 'gmax', 'gmin', 'max_fm', 'max_cmin', 'nreq', 'mreq', 'max_reqs', 'max_reqc', 'std_reqs', 'std_reqc', 'obj', 'metodo', 'tempo', 'semente']
     dfObv = pd.DataFrame(lobv, columns=col)
@@ -82,25 +81,17 @@ def criaDFLearning(linst, linst_n, listaAlg, listOrd, nrep, seed):
     return dfObv
 
 
-def criaData(listaAlg, listOrd, nrep, Inst, inome, seed):
+def criaData(listaAlg, listOrd, nrep, Inst, inome, seed, observ):
     # executar todos os algoritmos, número de vezes específica e coletar o resultado
-
+    #observ = []
     indicadores = classificaInst(Inst)
 
-    best = np.infty
-    best_mtd = ''
-    tempo_best = 0.0
-    best_seed = 0
-    for (A, O) in it.product(listaAlg, listOrd):
-        metodo = h.Hsolver(A, nrep, O)
-        for i in range(seed):
+    mtd = ''
+    for i in range(seed):
+        for (A, O) in it.product(listaAlg, listOrd):
+            metodo = h.Hsolver(A, nrep, O)
             metodo.setseed((i * 100 + 1000))
-            [obj, _, _, tempo] = metodo.solve1it(Inst)
-            if obj < best:
-                best = obj
-                best_mtd = A + ' ' + O
-                tempo_best = tempo
-                best_seed = (i * 100 + 1000)
-
-    observ = [inome] + indicadores + [best, best_mtd, tempo_best, best_seed]
-    return observ
+            [obj, _, _, tempo] = metodo.solvetemp(Inst)
+            mtd = A + ' ' + O
+            observ.append([inome] + indicadores + [obj, mtd, tempo, (i * 100 + 1000)])
+    return 0

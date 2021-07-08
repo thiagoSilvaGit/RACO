@@ -46,23 +46,23 @@ import learning as lear
 if __name__ == '__main__':
 
     #teste = '../Instâncias/pickle/att.pickle'
-    teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\att.pickle'
-    Inst = strgr.lePickle(teste)
+    #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
+    #Inst = strgr.lePickle(teste)
 
-    #Linst = []
-    #pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
-    #nomes = [nome  for nome in os.listdir(pasta)]
-    #caminhos = [pasta + nome for nome in nomes]
-    #nomesI = [nome[:nome.find('.pickle')]  for nome in nomes]
+    Linst = []
+    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\guardar\\"
+    nomes = [nome for nome in os.listdir(pasta)]
+    caminhos = [pasta + nome for nome in nomes]
+    nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
 
-    #for arq in caminhos:
-    #    Linst.append(strgr.lePickle(arq))
+    for arq in caminhos:
+        Linst.append(strgr.lePickle(arq))
 
-    #Lmet = ['kapov_bfd', 'kapov_ffd','criaantes_bfd','criaantes_ffd','criasemlim_bfd','criasemlim_ffd']
-    #Lord = ['cm','fm','cm_fm','fm_cm']
+    Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
+    Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
 
-    #dfobv = lear.criaDFLearning(Inst, nomesI, Lmet, Lord, 10,100)
-    dfobv = lear.criaDFLearning([Inst, Inst], ['att', 'att'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
+    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 10, 2)
+    #dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
     print(dfobv)
     dfobv.to_csv('saidait.csv')
