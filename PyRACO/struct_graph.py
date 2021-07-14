@@ -24,11 +24,12 @@ class Instancia:
         self.Ladj = []
         self.n = 0
 
-    def leTXT(self, file):
+    def leTXT(self, file, best):
         nf, adjf, Lreqf = li.lerTXT(file)  # Leitura do arquivo de dados
         self.n = nf
         self.Ladj = adjf
         self.Lreq = Lreqf
+        self.lb = best
 
     def imprimirTXT(self, pfile):
         with open(pfile, 'w') as pf:

@@ -61,7 +61,7 @@ if __name__ == '__main__':
     Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
     Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
 
-    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 10, 2)
+    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 2, 2)
     #dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
     print(dfobv)

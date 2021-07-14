@@ -12,12 +12,12 @@ import time
 def classificaInst(I):
     grafo = I.CriaGrafo()
     indGrafo = classificaGrafo(grafo)
-    indReq = classificaReq(I.Lreq, I.n)
+    indReq = classificaReq(I.Lreq, I.n, I.lb)
     listaInd = indGrafo + indReq
     return listaInd
 
 
-def classificaReq(R, n):
+def classificaReq(R, n, lb):
     sai = [sum(r) for r in R]
     entra = [sum([linha[j] for linha in R]) for j in range(len(R))]
     # 5.3 - Número de Requisições
@@ -32,7 +32,7 @@ def classificaReq(R, n):
     stdrs = st.stdev(sai)
     stdrc = st.stdev(entra)
 
-    return [nr, mrs, maxrs, maxrc, stdrs, stdrc]
+    return [nr, mrs, maxrs, maxrc, stdrs, stdrc, lb]
 
 
 def classificaGrafo(g):
@@ -75,7 +75,7 @@ def criaDFLearning(linst, linst_n, listaAlg, listOrd, nrep, seed):
         criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed, lobv)
         #lobv.append(obv)
 
-    col = ['nome', 'nos', 'arcos', 'a/g', 'gmax', 'gmin', 'max_fm', 'max_cmin', 'nreq', 'mreq', 'max_reqs', 'max_reqc', 'std_reqs', 'std_reqc', 'obj', 'metodo', 'tempo', 'semente']
+    col = ['nome', 'nos', 'arcos', 'a/g', 'gmax', 'gmin', 'max_fm', 'max_cmin', 'nreq', 'mreq', 'max_reqs', 'max_reqc', 'std_reqs', 'std_reqc', 'LB', 'obj', 'metodo', 'tempo', 'semente', 'GAP']
     dfObv = pd.DataFrame(lobv, columns=col)
 
     return dfObv
@@ -93,5 +93,5 @@ def criaData(listaAlg, listOrd, nrep, Inst, inome, seed, observ):
             metodo.setseed((i * 100 + 1000))
             [obj, _, _, tempo] = metodo.solvetemp(Inst)
             mtd = A + ' ' + O
-            observ.append([inome] + indicadores + [obj, mtd, tempo, (i * 100 + 1000)])
+            observ.append([inome] + indicadores + [obj, mtd, tempo, (i * 100 + 1000), ((obj - Inst.lb) / Inst.lb)])
     return 0
