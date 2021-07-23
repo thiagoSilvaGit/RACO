@@ -45,12 +45,14 @@ import learning as lear
 
 if __name__ == '__main__':
 
+	#/home/ICEA/05792717656/RACO	
     #teste = '../Instâncias/pickle/att.pickle'
     #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
     #Inst = strgr.lePickle(teste)
 
     Linst = []
-    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\guardar\\"
+    pasta = '../Instâncias/pickle/'
+    #pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\guardar\\"
     nomes = [nome for nome in os.listdir(pasta)]
     caminhos = [pasta + nome for nome in nomes]
     nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
@@ -61,10 +63,10 @@ if __name__ == '__main__':
     Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
     Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
 
-    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 2, 2)
+    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 60, 10)
     #dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
-    print(dfobv)
+    #print(dfobv)
     dfobv.to_csv('saidait.csv')
 '''
     pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
