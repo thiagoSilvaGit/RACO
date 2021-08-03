@@ -52,20 +52,21 @@ if __name__ == '__main__':
 
 	Linst = []
 	pasta = '../Instâncias/pickle/'
-	#pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\guardar\\"
+	#pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
 	nomes = [nome for nome in os.listdir(pasta)]
 	caminhos = [pasta + nome for nome in nomes]
 	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
 
 	for k,arq in enumerate(caminhos):
 		Linst.append(strgr.lePickle(arq))
-		Linst[k].lb =0 #gambiarra
+		#print(Linst[k].lb)
+		#Linst[k].lb =0 #gambiarra
 	
 
 	Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
 	Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
 
-	dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 10, 2)
+	dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 60, 10)
 	#dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
 	#print(dfobv)
