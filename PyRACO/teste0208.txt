@@ -1,0 +1,9 @@
+0
+Traceback (most recent call last):
+  File "/home/ICEA/05792717656/RACO/PyRACO/main.py", line 68, in <module>
+    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 10, 2)
+  File "/home/ICEA/05792717656/RACO/PyRACO/learning.py", line 76, in criaDFLearning
+    criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed, lobv)
+  File "/home/ICEA/05792717656/RACO/PyRACO/learning.py", line 96, in criaData
+    observ.append([inome] + indicadores + [obj, mtd, tempo, (i * 100 + 1000), ((obj - Inst.lb) / Inst.lb)])
+ZeroDivisionError: division by zero

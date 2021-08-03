@@ -24,7 +24,7 @@ class Instancia:
         self.Ladj = []
         self.n = 0
 
-    def leTXT(self, file, best):
+    def leTXT(self, file, best=0):
         nf, adjf, Lreqf = li.lerTXT(file)  # Leitura do arquivo de dados
         self.n = nf
         self.Ladj = adjf

@@ -46,105 +46,107 @@ import learning as lear
 if __name__ == '__main__':
 
 	#/home/ICEA/05792717656/RACO	
-    #teste = '../Instâncias/pickle/att.pickle'
-    #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
-    #Inst = strgr.lePickle(teste)
+	#teste = '../Instâncias/pickle/att.pickle'
+	#teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
+	#Inst = strgr.lePickle(teste)
 
-    Linst = []
-    pasta = '../Instâncias/pickle/'
-    #pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\guardar\\"
-    nomes = [nome for nome in os.listdir(pasta)]
-    caminhos = [pasta + nome for nome in nomes]
-    nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
+	Linst = []
+	pasta = '../Instâncias/pickle/'
+	#pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\guardar\\"
+	nomes = [nome for nome in os.listdir(pasta)]
+	caminhos = [pasta + nome for nome in nomes]
+	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
 
-    for arq in caminhos:
-        Linst.append(strgr.lePickle(arq))
+	for k,arq in enumerate(caminhos):
+		Linst.append(strgr.lePickle(arq))
+		Linst[k].lb =0 #gambiarra
+	
 
-    Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
-    Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
+	Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
+	Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
 
-    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 60, 10)
-    #dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
+	dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 10, 2)
+	#dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
-    #print(dfobv)
-    dfobv.to_csv('saidait.csv')
+	#print(dfobv)
+	dfobv.to_csv('saidait.csv')
 '''
-    pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
-    nomes = [nome  for nome in os.listdir(pasta)]
-    caminhos = [pasta + nome for nome in nomes]
-    #arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
-    #arquivos_txt = [arq for arq in arquivos if arq.lower().endswith(".txt")]
+	pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
+	nomes = [nome  for nome in os.listdir(pasta)]
+	caminhos = [pasta + nome for nome in nomes]
+	#arquivos = [arq for arq in caminhos if os.path.isfile(arq)]
+	#arquivos_txt = [arq for arq in arquivos if arq.lower().endswith(".txt")]
 
 
-    pastaR = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosPy\\"
-    nomesR = [nome[:nome.find('.txt')] +'_res.txt'  for nome in nomes]
-    caminhosR = [pastaR + nome for nome in nomesR]
-    #arquivosR = [arqRe for arqRe in caminhosR if os.path.isfile(arqRe)]
-    #arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
+	pastaR = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\ResultadosPy\\"
+	nomesR = [nome[:nome.find('.txt')] +'_res.txt'  for nome in nomes]
+	caminhosR = [pastaR + nome for nome in nomesR]
+	#arquivosR = [arqRe for arqRe in caminhosR if os.path.isfile(arqRe)]
+	#arquivosR_txt = [arqRe for arqRe in arquivosR if arqRe.lower().endswith(".txt")]
 
 
-    for arq,arqRe in zip(caminhos, caminhosR):
-        I = strgr.Instancia()
-        I.leTXT(arq)
-        print(arq)
-        for i in range(2):
-            semente = 1000 + i*100
-            random.seed(semente)
-            Lreq = I.splitReq()
+	for arq,arqRe in zip(caminhos, caminhosR):
+		I = strgr.Instancia()
+		I.leTXT(arq)
+		print(arq)
+		for i in range(2):
+			semente = 1000 + i*100
+			random.seed(semente)
+			Lreq = I.splitReq()
 
-            Glist=[]   #Lista de grafos
-            #n,adj,Lreq = li.lerTXT('brasil.txt') #Leitura do arquivo de dados
-            Fo = float('inf') #Inicializando a Função objetivo com infinito
-            #maxv2 = max([r.cmin for r in Lreq])
-            maxv = max(Lreq, key = lambda maxcmin : maxcmin.cmin)
-            maxcm = maxv.cmin    #Atribuindo o maior caminho minimo dos dados
-            end_time = time.time() + 120
-            countTimer = 0
-            while time.time() < end_time:
-                g = I.CriaGrafo()
-                Glist.append(strgr.Rede(g,len(Glist)+1))
-                if i==0:
-                    with open(arqRe, 'w') as arqR:
-                        arqR.write('Numero de arestas:' + str(g.number_of_edges()) + '\n')
-                        arqR.write('Numero de nos:' + str(g.number_of_nodes()) + '\n\n')
+			Glist=[]   #Lista de grafos
+			#n,adj,Lreq = li.lerTXT('brasil.txt') #Leitura do arquivo de dados
+			Fo = float('inf') #Inicializando a Função objetivo com infinito
+			#maxv2 = max([r.cmin for r in Lreq])
+			maxv = max(Lreq, key = lambda maxcmin : maxcmin.cmin)
+			maxcm = maxv.cmin	#Atribuindo o maior caminho minimo dos dados
+			end_time = time.time() + 120
+			countTimer = 0
+			while time.time() < end_time:
+				g = I.CriaGrafo()
+				Glist.append(strgr.Rede(g,len(Glist)+1))
+				if i==0:
+					with open(arqRe, 'w') as arqR:
+						arqR.write('Numero de arestas:' + str(g.number_of_edges()) + '\n')
+						arqR.write('Numero de nos:' + str(g.number_of_nodes()) + '\n\n')
 
-                random.shuffle(Lreq)       #Randomizando a Lista de requisição
-                Lreq.sort(key=lambda cammin: cammin.cmin,reverse=True)      #Ordenando a Lista de requisiçao em ordem decrescente em relação o Cammin
-                #Lreq.sort(key=lambda cammin: (cammin.cmin,cammin.mxf),reverse=True)
-                result = kv.mkapov(Lreq,Glist,I,maxcm,Fo)                 #Metodo Kapov
+				random.shuffle(Lreq)	   #Randomizando a Lista de requisição
+				Lreq.sort(key=lambda cammin: cammin.cmin,reverse=True)	  #Ordenando a Lista de requisiçao em ordem decrescente em relação o Cammin
+				#Lreq.sort(key=lambda cammin: (cammin.cmin,cammin.mxf),reverse=True)
+				result = kv.mkapov(Lreq,Glist,I,maxcm,Fo)				 #Metodo Kapov
 
-                if result < Fo:
-                    Fo = result
+				if result < Fo:
+					Fo = result
 
-                Glist.clear()
+				Glist.clear()
 
-            #maxv.clear()
-            with open(arqRe, 'a') as arqR:
-                arqR.write('Numero de grafos utilizados:' + str(Fo) + '\n')
-                arqR.write('Numero de requisições:'+ str(len(Lreq)) + '\n')
-                arqR.write('Semente utilizada:' + str(semente) + '\n')
-                arqR.write('\n')
-            Lreq.clear()
+			#maxv.clear()
+			with open(arqRe, 'a') as arqR:
+				arqR.write('Numero de grafos utilizados:' + str(Fo) + '\n')
+				arqR.write('Numero de requisições:'+ str(len(Lreq)) + '\n')
+				arqR.write('Semente utilizada:' + str(semente) + '\n')
+				arqR.write('\n')
+			Lreq.clear()
 
-        I.Lreq.clear()
-        I.Ladj.clear()
+		I.Lreq.clear()
+		I.Ladj.clear()
 
-    print(Fo)
+	print(Fo)
 '''
 """
-    #print(g.edges(data=True))
-    #nkx.draw(g,with_labels=True)
-    #plt.show()
-    #print(g.number_of_nodes())
-    #print(g.nodes())
-    #print(g.edges())
+	#print(g.edges(data=True))
+	#nkx.draw(g,with_labels=True)
+	#plt.show()
+	#print(g.number_of_nodes())
+	#print(g.nodes())
+	#print(g.edges())
 
 """
 '''
-    gera = G.Gerador('geracao1.xml')
-    I = gera.criaIns()
-    I.imprimirTXT('teste.txt')
-    g = I.CriaGrafo()
-    nkx.draw(g,with_labels=True)
-    plt.show()
+	gera = G.Gerador('geracao1.xml')
+	I = gera.criaIns()
+	I.imprimirTXT('teste.txt')
+	g = I.CriaGrafo()
+	nkx.draw(g,with_labels=True)
+	plt.show()
 '''

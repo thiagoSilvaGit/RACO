@@ -1,0 +1,12 @@
+Matplotlib is building the font cache; this may take a moment.
+0
+Traceback (most recent call last):
+  File "/home/ICEA/05792717656/RACO/PyRACO/main.py", line 66, in <module>
+    dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 60, 10)
+  File "/home/ICEA/05792717656/RACO/PyRACO/learning.py", line 75, in criaDFLearning
+    criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed, lobv)
+  File "/home/ICEA/05792717656/RACO/PyRACO/learning.py", line 87, in criaData
+    indicadores = classificaInst(Inst)
+  File "/home/ICEA/05792717656/RACO/PyRACO/learning.py", line 15, in classificaInst
+    indReq = classificaReq(I.Lreq, I.n, I.lb)
+AttributeError: 'Instancia' object has no attribute 'lb'
