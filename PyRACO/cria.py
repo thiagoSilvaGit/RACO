@@ -3,27 +3,76 @@
 import lerInst as li
 import numpy as np
 
-class Estado:
-    def __init__(self):
-        self.R = []
-        self.V = []
-        self.E = []
-        self.r_sd = 0
-    
-    def leTXT(self, file):
-        nf, adjf, Lreqf = li.lerTXT(file)  # Leitura do arquivo de dados
-        self.r_sd = np.array(Lreqf)
-        for y in range(nf):
-            for k in range(nf):
-                if self.r_sd[y][k]:
-                    self.R.append([y,k])
-    
-        adjMtx = np.array(adjf)
-        for y in range(nf):
-            self.V.append(y)
-            for k in range(nf):
-                if adjMtx[y][k]:
-                    self.E.append([y,k])
+class Problema:
+	''' Classe com os parametros que definem a instancia do problema
+		Objetivo: Gerenciar a instância do problema
+		Métodos Obrigatórios: 
+				 - Leitura
+				 - ImprimeResultados
+				 - SalvaResultados
+		Variáveis Obrigatórias:
+				 - Arquivo de entrada
+				 - Nome da Instância			
 
+	'''
+	def __init__(self, InstPar):
+		'''
+			Construtor
+			\par InstPar - Lista de parametros das instancia
+			DEVE SER SOBRESCRITO  
+		'''  
+		return 0
+
+	def Leitura(self, ArqEntrada):
+		'''
+			Metodo para carregamento de dados das instancias
+			\par ArqEntrada  - Nome do arquivo de entrada
+			DEVE SER SOBRESCRITO
+		'''
+		return 0 
+
+	def ImprimeResultados(self):
+		'''
+			Metodo para impressao de resultados da analise
+			DEVE SER SOBRESCRITO
+		'''
+		return 0 
+
+	def SalvaResultados(self, ArqSaida):
+		'''
+			Metodo para escrita detalhada de resultados da analise
+			\par ArqSaida  - Nome do arquivo de saida
+			DEVE SER SOBRESCRITO
+		'''
+		return 0 
+
+
+class Estado:
+    def __init__(self, t, lR, matAdj, matrsd, LM, matlambdaij):
+        self.R = self.criaSetReq()
+        self.Ladj = matAdj
+        self.r_sd = matrsd
+        self.LambdaMax = LM
+        self.lambdaij = matlambdaij
+ 	    self.grafo = self.criaGrafo()
+ 	    self.estagio = t
+ 	
+    def criaGrafo(self):
+        npAdj = np.array(self.Ladj)
+        grafo = nkx.convert_matrix.from_numpy_matrix(
+            npAdj, create_using=nkx.DiGraph)
+        capacidade = 1 #criar capacidade
+        nkx.set_edge_attributes(grafo, capacidade, "capacity")
+        return (grafo)
+
+	return g
+
+    def criaSetReq(self):
+    	lr = [(s,d) for d in range(len(self.r_sd[s])) for s in range(len(self.r_sd[s])) if self.r_sd[s][d]>0]
+        return lr
+        		
+	def trasicao(self,Dec,ParInc = []):
+		self.estagio += 1 
+		# equações de transição
 
         
