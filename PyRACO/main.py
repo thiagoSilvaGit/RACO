@@ -13,6 +13,7 @@ import os
 import pandas as pd
 import heuristicas as h
 import learning as lear
+import cria
 
 # 1 - Executar os testes do artigo - ok
 # 2 - Criar método par ler / converter  novas instâncias - ok
@@ -51,11 +52,12 @@ if __name__ == '__main__':
 	#Inst = strgr.lePickle(teste)
 
 	Linst = []
-	pasta = '../Instâncias/pickle/'
-	#pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
+	#pasta = '../Instâncias/pickle/'
+	pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
 	nomes = [nome for nome in os.listdir(pasta)]
 	caminhos = [pasta + nome for nome in nomes]
 	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
+
 
 	for k,arq in enumerate(caminhos):
 		Linst.append(strgr.lePickle(arq))
