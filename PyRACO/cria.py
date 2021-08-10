@@ -15,21 +15,18 @@ class Problema:
 				 - Nome da Instância			
 
 	'''
-	def __init__(self, InstPar):
-		'''
-			Construtor
-			\par InstPar - Lista de parametros das instancia
-			DEVE SER SOBRESCRITO  
-		'''  
-		return 0
+	def __init__(self, lR, matAdj, matrsd, LM, matlambdaij):
+        self.Ladj = matAdj
+        self.r_sd = matrsd
+        self.R = self.criaSetReq()
+ 	    self.grafo = self.criaGrafo()
+
 
 	def Leitura(self, ArqEntrada):
-		'''
-			Metodo para carregamento de dados das instancias
-			\par ArqEntrada  - Nome do arquivo de entrada
-			DEVE SER SOBRESCRITO
-		'''
-		return 0 
+        nf, adjf, Lreqf = li.lerTXT(ArqEntrada)  # Leitura do arquivo de dados
+        self.Ladj = np.array(adjf)
+        self.r_sd = np.array(Lreqf)
+
 
 	def ImprimeResultados(self):
 		'''
@@ -58,17 +55,15 @@ class Estado:
  	    self.estagio = t
  	
     def criaGrafo(self):
-        npAdj = np.array(self.Ladj)
         grafo = nkx.convert_matrix.from_numpy_matrix(
-            npAdj, create_using=nkx.DiGraph)
+            self.Ladj, create_using=nkx.DiGraph)
         capacidade = 1 #criar capacidade
         nkx.set_edge_attributes(grafo, capacidade, "capacity")
-        return (grafo)
-
-	return g
+    
+        return grafo
 
     def criaSetReq(self):
-    	lr = [(s,d) for d in range(len(self.r_sd[s])) for s in range(len(self.r_sd[s])) if self.r_sd[s][d]>0]
+        lr = [(s,d) for d in range(len(self.r_sd[s])) for s in range(len(self.r_sd[s])) if self.r_sd[s][d]>0]
         return lr
         		
 	def trasicao(self,Dec,ParInc = []):
