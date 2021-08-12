@@ -66,7 +66,9 @@ class Estado:
 			self.Ladj, create_using=nkx.DiGraph)
 		capacidade = 1 #criar capacidade
 		nkx.set_edge_attributes(grafo, capacidade, "capacity") # como setar a capacidade diferente para cada arco
-	
+		for i in range(len(self.Ladj)):
+			for j in range(len(self.Ladj)):
+				grafo[i][j]["capacity"] = matlambda[i][j]
 		return grafo
 
 	def criaSetReq(self):
