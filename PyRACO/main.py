@@ -1,5 +1,5 @@
 # This is a sample Python script.
-import networkx as nx
+import networkx as nkx
 import lerInst as li
 import numpy as np
 import struct_graph as strgr
@@ -13,6 +13,7 @@ import os
 import pandas as pd
 import heuristicas as h
 import learning as lear
+#import cria
 
 # 1 - Executar os testes do artigo - ok
 # 2 - Criar método par ler / converter  novas instâncias - ok
@@ -51,11 +52,14 @@ if __name__ == '__main__':
 	#Inst = strgr.lePickle(teste)
 
 	Linst = []
-	pasta = '../Instâncias/pickle/'
-	#pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
+	#pasta = '../Instâncias/pickle/'
+	pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
 	nomes = [nome for nome in os.listdir(pasta)]
 	caminhos = [pasta + nome for nome in nomes]
 	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
+
+
+
 
 	for k,arq in enumerate(caminhos):
 		Linst.append(strgr.lePickle(arq))
@@ -70,7 +74,7 @@ if __name__ == '__main__':
 	#dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
 	#print(dfobv)
-	dfobv.to_csv('saidait.csv')
+	#dfobv.to_csv('saidait.csv')
 '''
 	pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias - Copia1\\"
 	nomes = [nome  for nome in os.listdir(pasta)]
