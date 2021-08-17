@@ -155,5 +155,11 @@ class Politica:
 		
 		
 		### QUAIS INDICADORES SERAO ALTERADO COM ALTERAÇÃO NO ESTADO
+		'''
+		Comprimento de onda: Tamanho do comprimento de onda máximo, par de arco (i,j) com maior utilização, 
+		par de arco (i,j) com menor utilização, deficit máximo, deficit médio e deficit total, 
+		max grau lógico (Req) por grau físico (arestas), médio grau lógico / grau físico;
+		
+		'''
 		  
 		return d
