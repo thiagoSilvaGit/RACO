@@ -23,6 +23,7 @@ class Instancia:
         self.Lreq = []
         self.Ladj = []
         self.n = 0
+        self.lb = 0
 
     def leTXT(self, file, best=0):
         nf, adjf, Lreqf = li.lerTXT(file)  # Leitura do arquivo de dados

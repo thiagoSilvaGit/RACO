@@ -13,19 +13,20 @@ class Gerador:
 		self.NumReq = dictGen['NumReq']
 		self.Maxreq = dictGen['Maxreq']
 
+
 	def criaIns(self):
 
 		I = strgr.Instancia()
 
 		Ladj = [[0]*self.n for ni in range(self.n)]
-
 		for i in range(self.n):
 			for j in range(i+1,self.n):
 				aresta = nbin(1,self.Densidade)
-				Ladj[i][j] = aresta
-				Ladj[j][i] = aresta
+				grau = sum(Ladj[i][k] for k in range(self.n))
+				if grau < self.MaxGrau:  
+					Ladj[i][j] = aresta
+					Ladj[j][i] = aresta
 		I.Ladj = Ladj
-
 		reqpercapta = self.NumReq/(self.n*(self.n-1))
 		if self.Maxreq <= reqpercapta:
 			self.Maxreq = reqpercapta+1

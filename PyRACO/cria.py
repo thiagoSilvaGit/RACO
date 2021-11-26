@@ -17,8 +17,8 @@ class Problema:
 	'''
 	def __init__(self, arq = None):
 	
-		self.Ladj = []
-		self.r_sd = []
+		self.Ladj = []              #Lista de adjacentes
+		self.r_sd = []              #Lista de requisiçoes
 		if arq is not None:
 			self.Leitura(arq) 
 
