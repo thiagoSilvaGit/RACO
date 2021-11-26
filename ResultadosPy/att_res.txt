@@ -1,0 +1,3 @@
+Numero de arestas:274
+Numero de nos:90
+

@@ -1,0 +1,11 @@
+Numero de arestas:140
+Numero de nos:27
+
+Numero de grafos utilizados:48
+Numero de requisições:1370
+Semente utilizada:1000
+
+Numero de grafos utilizados:48
+Numero de requisições:1370
+Semente utilizada:1100
+
