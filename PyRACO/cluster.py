@@ -9,6 +9,8 @@ import pyclustering
 from pyclustering.cluster.kmeans import kmeans, kmeans_visualizer
 from pyclustering.utils.metric import type_metric, distance_metric
 from pyclustering.cluster import cluster_visualizer_multidim
+from pyclustering.cluster.center_initializer import kmeans_plusplus_initializer
+import random 
 
 
 def my_func(L1, L2):
@@ -26,8 +28,7 @@ if __name__ == '__main__':
     grafo = Inst.CriaGrafo()
     Lreq = Inst.splitReq()
     Lij = []
-    #for x in range(len(Lreq)):
-    #    Lij.append([Lreq[x].i,Lreq[x].j])
+    cent = []
     #metric = distance_metric(type_metric.USER_DEFINED, func=my_func)
     #distance = metric(Lij[10], Lij[12])
     #print(distance)
@@ -53,14 +54,11 @@ if __name__ == '__main__':
     
     #metric = distance_metric(type_metric.USER_DEFINED, func=my_func)
     metric = distance_metric(type_metric.EUCLIDEAN)
-    distance = metric(Lij[12], Lij[13])
-    print(distance)
-    C1 = nkx.shortest_path(grafo,Lreq[12].i,Lreq[12].j)
-    C2 = nkx.shortest_path(grafo,Lreq[13].i,Lreq[13].j)
-    #p = [2,1]
-    #print(p[0])
-    start_centers = [Lij[5],Lij[12],Lij[25]]
-    kmeans_instance = kmeans(Lij, start_centers,metric=metric)
+    random.seed(1000)
+    start_centers = kmeans_plusplus_initializer(Lij,5).initialize()
+
+    #start_centers = [cent[0],cent[1],cent[2],cent[3]]
+    kmeans_instance = kmeans(Lij, start_centers, metric=metric)
     kmeans_instance.process()
     clusters = kmeans_instance.get_clusters()
     print(clusters)
