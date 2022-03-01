@@ -59,18 +59,19 @@ if __name__ == '__main__':
 	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
 
 
-
-
-	for k,arq in enumerate(caminhos):
-		Linst.append(strgr.lePickle(arq))
+	
+	T = G.Gerador.criaIns(G.Gerador('geracao2.xml'))
+	strgr.Instancia.imprimirTXT(T,'terca1.txt')
+	#for k,arq in enumerate(caminhos):
+	#	Linst.append(strgr.lePickle(arq))
 		#print(Linst[k].lb)
 		#Linst[k].lb =0 #gambiarra
 	
 
-	Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
-	Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
+	#Lmet = ['kapov_bfd', 'kapov_ffd', 'criaantes_bfd', 'criaantes_ffd', 'criasemlim_bfd', 'criasemlim_ffd']
+	#Lord = ['cm', 'fm', 'cm_fm', 'fm_cm']
 
-	dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 60, 10)
+	#dfobv = lear.criaDFLearning(Linst, nomesI, Lmet, Lord, 60, 10)
 	#dfobv = lear.criaDFLearning([Inst, Inst], ['eon', 'eon'], ['kapov_bfd', 'kapov_ffd'], ['cm', 'fm'], 10, 3)
 
 	#print(dfobv)

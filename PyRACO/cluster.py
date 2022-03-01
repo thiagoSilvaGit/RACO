@@ -21,10 +21,11 @@ def my_func(L1, L2):
     return cinter
 
 #class Cluster:
-if __name__ == '__main__':
-    teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
+def fcluster(arq):
+#if __name__ == '__main__':
+    #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
     #teste = '../Instâncias/pickle/att.pickle'
-    Inst = strgr.lePickle(teste)
+    Inst = strgr.lePickle(arq)
     grafo = Inst.CriaGrafo()
     Lreq = Inst.splitReq()
     Lij = []
@@ -52,17 +53,20 @@ if __name__ == '__main__':
         Camin.clear()
         Radj.clear()    
     
-    #metric = distance_metric(type_metric.USER_DEFINED, func=my_func)
-    metric = distance_metric(type_metric.EUCLIDEAN)
+    metric = distance_metric(type_metric.USER_DEFINED, func=my_func)
+    #metric = distance_metric(type_metric.EUCLIDEAN)
     random.seed(1000)
-    start_centers = kmeans_plusplus_initializer(Lij,5).initialize()
+    start_centers = kmeans_plusplus_initializer(Lij,25).initialize()
 
     #start_centers = [cent[0],cent[1],cent[2],cent[3]]
     kmeans_instance = kmeans(Lij, start_centers, metric=metric)
     kmeans_instance.process()
     clusters = kmeans_instance.get_clusters()
-    print(clusters)
     #visualizer = cluster_visualizer_multidim()
     #visualizer.append_clusters(clusters, Lij)
     #visualizer.show(max_row_size=3)
-    
+    #for i in clusters[1]:
+    #    print(Lreq[i].i)
+    #    print(Lreq[i].j)
+    print(len(clusters))
+    return clusters 
