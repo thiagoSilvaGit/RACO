@@ -1,6 +1,7 @@
 import struct_graph as strgr
 from  numpy.random import binomial as nbin
 from numpy.random import choice as chc
+from numpy.random import randn as rdn
 import lerInst as li
 import random
 
@@ -43,18 +44,25 @@ class Gerador:
 				if i != j:
 					Preq.append((i,j))
 
+		random.shuffle(Preq)
 		prob = 0.2
+		
+
 		for i in range(self.NumReq):
 			ok = False
 			while not ok:
 				#o, d = chc(range(self.n), 2, replace=False) maneira antiga de escolha do par origem/destino
-				ind = nbin(len(Preq), prob, 1)
-				o, d = Preq[ind[0]]
-				if Lreq[o][d] < self.Maxreq:
-					ok = True
-					Lreq[o][d]+=1
-					if Lreq[o][d] == self.Maxreq:
-						del(Preq[ind[0]])
+				for j in range(len(Preq)):
+					u = rdn()
+					if u < prob:
+						o, d = Preq[j]
+						if Lreq[o][d] < self.Maxreq:
+							ok = True
+							Lreq[o][d]+=1
+						if Lreq[o][d] == self.Maxreq:
+							del(Preq[j])
+						break
+			
 		I.Lreq = Lreq
 		I.n = self.n
 

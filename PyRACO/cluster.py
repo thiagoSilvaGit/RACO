@@ -7,18 +7,22 @@ import lerInst as li
 import gerador as GR
 import pyclustering
 from pyclustering.cluster.kmeans import kmeans, kmeans_visualizer
-from pyclustering.utils.metric import type_metric, distance_metric
+from pyclustering.utils.metric import type_metric, distance_metric,euclidean_distance
 from pyclustering.cluster import cluster_visualizer_multidim
 from pyclustering.cluster.center_initializer import kmeans_plusplus_initializer
 import random 
 
 
-def my_func(L1, L2):
+def my_func1(L1, L2):
     cinter=0
     for i in range(len(L1)):
         if L1[i] == L2[i] and L1[i] == 1 and L2[i] == 1:
             cinter = cinter + 1
-    return cinter
+    return (-cinter)
+
+def my_func2(L1, L2):
+    eucl = euclidean_distance(L1,L2)
+    return (1/(eucl+1))
 
 #class Cluster:
 def fcluster(arq):
@@ -53,10 +57,10 @@ def fcluster(arq):
         Camin.clear()
         Radj.clear()    
     
-    metric = distance_metric(type_metric.USER_DEFINED, func=my_func)
+    metric = distance_metric(type_metric.USER_DEFINED, func=my_func2)
     #metric = distance_metric(type_metric.EUCLIDEAN)
     random.seed(1000)
-    start_centers = kmeans_plusplus_initializer(Lij,25).initialize()
+    start_centers = kmeans_plusplus_initializer(Lij,5).initialize()
 
     #start_centers = [cent[0],cent[1],cent[2],cent[3]]
     kmeans_instance = kmeans(Lij, start_centers, metric=metric)
