@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
 	
 	T = G.Gerador.criaIns(G.Gerador('geracao2.xml'))
-	strgr.Instancia.imprimirTXT(T,'domingo1.txt')
+	strgr.Instancia.imprimirTXT(T,'domingo2.txt')
 	#for k,arq in enumerate(caminhos):
 	#	Linst.append(strgr.lePickle(arq))
 		#print(Linst[k].lb)
