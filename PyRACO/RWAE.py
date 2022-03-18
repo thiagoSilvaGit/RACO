@@ -19,7 +19,9 @@ def Mrwae (req,I,LambdaT):
 #Leitura de arquiva para extrair os valores dos conjustos de arestas e requisições
 #Conjunto E (arestas) e R (pares de requisições)
 #Parametro r[s,d], numero de requisições entre os pares 
+    
     model = grb.Model()
+    model.Params.LogToConsole = 0
     E = []
     R = []
     V = []

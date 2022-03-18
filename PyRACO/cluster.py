@@ -22,7 +22,8 @@ def my_func1(L1, L2):
 
 def my_func2(L1, L2):
     eucl = euclidean_distance(L1,L2)
-    return (1/(eucl+1))
+    #return (1/(eucl+1))
+    return (-eucl)
 
 #class Cluster:
 def fcluster(arq):
@@ -60,7 +61,7 @@ def fcluster(arq):
     metric = distance_metric(type_metric.USER_DEFINED, func=my_func2)
     #metric = distance_metric(type_metric.EUCLIDEAN)
     random.seed(1000)
-    start_centers = kmeans_plusplus_initializer(Lij,5).initialize()
+    start_centers = kmeans_plusplus_initializer(Lij,6).initialize()
 
     #start_centers = [cent[0],cent[1],cent[2],cent[3]]
     kmeans_instance = kmeans(Lij, start_centers, metric=metric)
