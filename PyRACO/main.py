@@ -58,10 +58,6 @@ if __name__ == '__main__':
 	caminhos = [pasta + nome for nome in nomes]
 	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
 
-
-	
-	T = G.Gerador.criaIns(G.Gerador('geracao2.xml'))
-	strgr.Instancia.imprimirTXT(T,'domingo2.txt')
 	#for k,arq in enumerate(caminhos):
 	#	Linst.append(strgr.lePickle(arq))
 		#print(Linst[k].lb)
