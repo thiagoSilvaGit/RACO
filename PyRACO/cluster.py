@@ -41,7 +41,7 @@ def my_funcA(L):
     return pairwise_distances(L, metric= my_func1)
 
 #class Cluster:
-def fcluster(arq):
+def fcluster(arq,numR):
 #if __name__ == '__main__':
     #teste = 'C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\eon.pickle'
     #teste = '../Instâncias/pickle/att.pickle'
@@ -49,8 +49,8 @@ def fcluster(arq):
     Inst = strgr.lePickle(arq)
     grafo = Inst.CriaGrafo()
     Lreq = Inst.splitReq()
-    Lij = []                  #lista dos vetores binarios dos caminhos das requisições
-    LRij = []                 #Lista dos caminhos das requisiçoes
+    Lij = []                  #lista dos vetores binarios dos caminhos minimos das requisições
+    LRij = []                 #Lista dos pares O/D das requisiçoes
     cent = []                 #centroides
     ladjMtx = np.array(Inst.Ladj)
     ledges = []               #vetor de arcos da rede
@@ -91,7 +91,7 @@ def fcluster(arq):
 
     L = np.array(Lij)
     #L = np.array(LRij)
-    NC =  math.ceil(len(Lij)/30)
+    NC =  math.ceil(len(Lij)/numR)
 
     clusters = AgglomerativeClustering(n_clusters= NC).fit(L) #affinity = my_funcA, linkage = 'average').fit(L)
         

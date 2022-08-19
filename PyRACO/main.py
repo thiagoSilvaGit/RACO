@@ -53,7 +53,7 @@ if __name__ == '__main__':
 
 	Linst = []
 	#pasta = '../Instâncias/pickle/'
-	pasta = "C:\\Users\\Artur Alvarenga\\Documents\\GitHub\\RACO\\Instâncias\\pickle\\"
+	pasta = "C:\\Users\\Artur Alvarenga\\Documents\\RACO\\Instâncias\\pickle\\"
 	nomes = [nome for nome in os.listdir(pasta)]
 	caminhos = [pasta + nome for nome in nomes]
 	nomesI = [nome[:nome.find('.pickle')] for nome in nomes]

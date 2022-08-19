@@ -1,0 +1,42 @@
+Arquivo:brasil
+Numero de clusters gerados: 46
+Função objetivo: 58.0
+
+Tempo de criacao E/V:0.4227
+Tempo total: 3.1127
+Tempo total criacao: 2.1454
+Tempo total execucao: 0.5435
+Tempo de clusterizacao:0.5333
+Tempo total parametro: 0.4238
+Arquivo:brasil
+Numero de clusters gerados: 46
+Função objetivo: 58.0
+
+Tempo de criacao E/V:0.4440
+Tempo total: 3.2192
+Tempo total criacao: 2.0721
+Tempo total execucao: 0.6875
+Tempo de clusterizacao:0.5621
+Tempo total parametro: 0.4596
+Arquivo:brasil
+Numero de clusters gerados: 46
+Função objetivo: 58.0
+
+Tempo de criacao E/V:0.4097
+Tempo total: 3.1793
+Tempo total criacao: 2.1993
+Tempo total execucao: 0.5693
+Tempo de clusterizacao:0.6566
+Tempo total parametro: 0.4107
+
+Arquivo:brasil
+Numero de clusters gerados: 46
+Função objetivo: 58.0
+
+Tempo de criacao E/V:0.4134
+Tempo total: 2.8708
+Tempo total criacao: 1.9287
+Tempo total execucao: 0.5287
+Tempo de clusterizacao:0.5344
+Tempo total parametro: 0.4134
+
