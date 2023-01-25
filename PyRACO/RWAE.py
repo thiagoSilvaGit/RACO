@@ -18,7 +18,7 @@ Requisições R(s,d)
 '''Parametros:
 param s{s,d}, numero de requisições entre o par (s,d)
 '''
-
+#Modelo exato
 def Mrwae (LambdaT,E,V,R,r): 
 #Leitura de arquiva para extrair os valores dos conjustos de arestas e requisições
 #Conjunto E (arestas) e R (pares de requisições)
@@ -73,8 +73,8 @@ def Mrwae (LambdaT,E,V,R,r):
     
     model.setObjective(expr=Lambda_max, sense= grb.GRB.MINIMIZE)
     tf = time.time() - ti
-    tempo = [tf]
-    ti = time.time()
+    tempo = [tf]        #Tempo criaçao
+    ti = time.time()    
     model.optimize()
     tempo.append(time.time()-ti) 
     
@@ -89,7 +89,7 @@ def Mrwae (LambdaT,E,V,R,r):
 
     return Ltotal, model.status, tempo
    
-
+#Modelo relaxado
 def Mrwaerf (R,Rrl,r,rrl,LambdaT,E,V):
     
 
@@ -155,10 +155,10 @@ def Mrwaerf (R,Rrl,r,rrl,LambdaT,E,V):
     
     model.setObjective(expr=Lambda_max, sense= grb.GRB.MINIMIZE)        
     tf = time.time() - ti
-    tempo = [tf]
+    tempo = [tf]         #Tempo Criaçao     
     ti = time.time()
     model.optimize()
-    tempo.append(time.time()-ti)
+    tempo.append(time.time()-ti)       #Tempo execução
 
 
     #print(model.status)
@@ -172,7 +172,7 @@ def Mrwaerf (R,Rrl,r,rrl,LambdaT,E,V):
 
     return Ltotal, model.status,tempo
 
-
+#Relaxacao do modelo
 def relaxandfix(I,cluster):    
     E = []
     R = []
@@ -218,13 +218,14 @@ def relaxandfix(I,cluster):
     
     return lamb, status, tempo
 
+#Funcao para a resolucao do problema exato 
 def func(I,cluster):
-    E = []
-    V = []
+    E = []             #Lista de arestas
+    V = []             #Lista de vertices
     ti = time.time()
     tempo = []
-    lamb = np.zeros((Inst.n, Inst.n))
-    Ltotal = np.zeros((Inst.n,Inst.n))
+    lamb = np.zeros((Inst.n, Inst.n))       #Inicializando lambda com todos os indices zerados
+    Ltotal = np.zeros((Inst.n,Inst.n))      #Inicializando o resultado final com todos os indices zerados 
     Lreq = I.splitReq()
     for i in range(I.n):
         V.append(i)
@@ -232,7 +233,7 @@ def func(I,cluster):
             if I.Ladj[i][j]:
                 E.append((i,j))
 
-    tf = time.time() - ti
+    tf = time.time() - ti        #tempo de criaçao E/V
     ti = time.time()
     tempo.append(tf)
     for i in range(len(cluster)):
@@ -243,7 +244,7 @@ def func(I,cluster):
             if (Lreq[k].i,Lreq[k].j) not in R:
                 R.append((Lreq[k].i,Lreq[k].j))
             r[Lreq[k].i][Lreq[k].j] = 1 + r[Lreq[k].i][Lreq[k].j]
-        tempo.append(time.time() - ti)
+        tempo.append(time.time() - ti)             #Tempo parametro
         Lbd, status, tempex = Mrwae(lamb, E, V, R, r)
         tempo += tempex
         for j in range(Inst.n):
@@ -253,13 +254,13 @@ def func(I,cluster):
     return lamb,status,tempo
 
 if __name__ == '__main__':
-    pasta = sys.argv[1]
+    pasta = sys.argv[1]           #Instancias
     nomes = [nome for nome in os.listdir(pasta)]
     caminhos = [pasta + nome for nome in nomes]
     nomesI = [nome[:nome.find('.pickle')] for nome in nomes]
-    resp = sys.argv[2]
-    met = sys.argv[3]
-    nclt = sys.argv[4]
+    resp = sys.argv[2]      #Resuultados
+    met = sys.argv[3]       #Metodo de resolucao exato/relaxado
+    nclt = int(sys.argv[4])      #Numero de requisicoes por cluster
     
     for Na, arq in enumerate(caminhos):
         Inst = strgr.lePickle(arq)

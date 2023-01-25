@@ -72,7 +72,6 @@ def classificaGrafo(g):
 def criaDFLearning(linst, linst_n, listaAlg, listOrd, nrep, seed):
 	lobv = []
 	for i in range(len(linst)):
-		print(i)
 		criaData(listaAlg, listOrd, nrep, linst[i], linst_n[i], seed, lobv)
 		#lobv.append(obv)
 
